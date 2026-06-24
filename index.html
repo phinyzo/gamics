@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gamics - Create Manage Matches</title>
+  <title>PHINTECH ARENA - Kenya's Gaming Hub | Powered by PhinTech Solutions</title>
 
   <!-- 
     - favicon
@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Oxanium:wght@600;700;800&family=Poppins:wght@400;500;600;700;800;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Oxanium:wght@600;700;800&family=Poppins:wght@400;500;600;700;800;900&family=Orbitron:wght@700;800;900&display=swap"
     rel="stylesheet">
 
   <!-- 
@@ -42,8 +42,9 @@
     <div class="header-top">
       <div class="container">
 
-        <div class="countdown-text">
-          Exclusive Black Friday ! Offer <span class="span skewBg">10</span> Days
+        <div class="hot-ticker-wrap">
+          <span class="hot-ticker-label">LIVE</span>
+          <span id="hotTickerText">🎮 Kenya's #1 Gaming Hub — New Titles Every Week</span>
         </div>
 
         <div class="social-wrapper">
@@ -86,7 +87,10 @@
     <div class="header-bottom skewBg" data-header>
       <div class="container">
 
-        <a href="#" class="logo">Gamics</a>
+        <a href="#" class="logo logo-arena" aria-label="PhinTech Arena Home">
+          <span class="logo-phintech">PHINTECH</span>
+          <span class="logo-arena-word">ARENA</span>
+        </a>
 
         <nav class="navbar" data-navbar>
           <ul class="navbar-list">
@@ -104,7 +108,15 @@
             </li>
 
             <li class="navbar-item">
+              <a href="#games" class="navbar-link skewBg" data-nav-link>Games</a>
+            </li>
+
+            <li class="navbar-item">
               <a href="#shop" class="navbar-link skewBg" data-nav-link>Shop</a>
+            </li>
+
+            <li class="navbar-item">
+              <a href="#arena" class="navbar-link skewBg" data-nav-link>Arena</a>
             </li>
 
             <li class="navbar-item">
@@ -120,9 +132,95 @@
 
         <div class="header-actions">
 
+          <!-- Auth — header sign in / user area -->
+          <div class="header-auth" id="headerAuth">
+            <button class="header-signin-btn" id="headerSignInBtn" aria-label="Sign in">
+              <ion-icon name="person-circle-outline"></ion-icon>
+              <span class="header-signin-label">Sign In</span>
+            </button>
+
+            <div class="header-user-area" id="headerUserArea" style="display:none;">
+              <!-- Trigger button -->
+              <button class="hud-trigger" id="headerUserBtn" aria-label="My account" aria-expanded="false">
+                <div class="hud-avatar-ring" id="hudAvatarRing">
+                  <img src="" alt="" id="headerUserAvatar" class="hud-avatar-img">
+                  <span class="hud-avatar-fallback" id="hudAvatarFallback">?</span>
+                  <div class="hud-ring-glow"></div>
+                </div>
+                <div class="hud-info">
+                  <span class="hud-tag" id="headerUserName">Player</span>
+                  <span class="hud-rank" id="hudRank">Rank N/A</span>
+                </div>
+                <ion-icon name="chevron-down-outline" class="hud-chevron" id="hudChevron"></ion-icon>
+              </button>
+
+              <!-- Dropdown -->
+              <div class="hud-dropdown" id="hudDropdown">
+                <!-- Header with avatar + name -->
+                <div class="hud-drop-header">
+                  <div class="hud-drop-avatar-wrap">
+                    <img src="" alt="" id="hudDropAvatar" class="hud-drop-avatar-img">
+                    <span class="hud-drop-avatar-fallback" id="hudDropFallback">?</span>
+                    <div class="hud-drop-online-dot"></div>
+                  </div>
+                  <div>
+                    <p class="hud-drop-name" id="hudDropName">Player</p>
+                    <p class="hud-drop-email" id="hudDropEmail"></p>
+                  </div>
+                </div>
+
+                <!-- Mini stats -->
+                <div class="hud-stats-row">
+                  <div class="hud-stat-item">
+                    <span class="hud-stat-val" id="hudStatElo">—</span>
+                    <span class="hud-stat-lbl">ELO</span>
+                  </div>
+                  <div class="hud-stat-divider"></div>
+                  <div class="hud-stat-item">
+                    <span class="hud-stat-val" id="hudStatWins">—</span>
+                    <span class="hud-stat-lbl">Wins</span>
+                  </div>
+                  <div class="hud-stat-divider"></div>
+                  <div class="hud-stat-item">
+                    <span class="hud-stat-val" id="hudStatTourns">—</span>
+                    <span class="hud-stat-lbl">Tourneys</span>
+                  </div>
+                </div>
+
+                <!-- Avatar picker -->
+                <div class="hud-section-label">
+                  <ion-icon name="person-circle-outline"></ion-icon> Choose Avatar
+                </div>
+                <div class="hud-avatar-grid" id="hudAvatarGrid">
+                  <!-- filled by JS -->
+                </div>
+
+                <!-- Quick links -->
+                <div class="hud-divider"></div>
+                <nav class="hud-links">
+                  <a href="#arena" class="hud-link" id="hudLinkProfile" onclick="openProfileModal(); document.getElementById('hudDropdown').classList.remove('open');">
+                    <ion-icon name="person-outline"></ion-icon> Edit Profile
+                  </a>
+                  <a href="#arena" class="hud-link" onclick="switchArenaTab('leaderboard'); document.getElementById('hudDropdown').classList.remove('open');">
+                    <ion-icon name="bar-chart-outline"></ion-icon> My Rankings
+                  </a>
+                  <a href="#arena" class="hud-link" onclick="switchArenaTab('tournaments'); document.getElementById('hudDropdown').classList.remove('open');">
+                    <ion-icon name="trophy-outline"></ion-icon> Tournaments
+                  </a>
+                  <button class="hud-link hud-signout" id="signOutBtn">
+                    <ion-icon name="log-out-outline"></ion-icon> Sign Out
+                  </button>
+                </nav>
+
+                <p class="hud-powered">
+                  <a href="https://phintechsolutions.com" target="_blank" rel="noopener">PhinTech Solutions — Kenya</a>
+                </p>
+              </div>
+            </div>
+          </div>
+
           <button class="cart-btn" aria-label="cart">
             <ion-icon name="cart"></ion-icon>
-
             <span class="cart-badge">0</span>
           </button>
 
@@ -181,15 +279,14 @@
 
           <div class="hero-content">
 
-            <p class="hero-subtitle">World Gaming</p>
+            <p class="hero-subtitle">Kenya's Gaming Hub</p>
 
             <h1 class="h1 hero-title">
-              Create <span class="span">Manage</span> Matches
+              Buy <span class="span">Play</span> Win
             </h1>
 
             <p class="hero-text">
-              Find technology or people for digital projects in public sector and Find an individual specialist develope
-              researcher.
+              Get the latest games from KES 1000. AAA titles like Call of Duty, FIFA, and more from KES 1,000. Pay via M-Pesa. Instant delivery.
             </p>
 
             <button class="btn skewBg">Read More</button>
@@ -206,6 +303,36 @@
 
 
 
+
+      <!-- ── ACTIVITY TICKER STRIP ─────────────────────────────────────── -->
+      <div class="activity-strip" aria-live="polite" aria-label="Live activity feed">
+        <div class="activity-strip-inner container">
+          <span class="activity-strip-label">Live</span>
+          <div class="activity-scroll-wrap">
+            <div class="activity-scroll-track" id="activityTicker">
+              <span class="activity-item"><span class="activity-icon">🎮</span>Loading live activity...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PULSE BANNER — Open Tournaments ──────────────────────────── -->
+      <section class="pulse-section" aria-label="Live tournaments" id="pulseBannerSection">
+        <div class="container">
+          <div class="pulse-header">
+            <h2 class="pulse-title">
+              <span class="pulse-live-dot" aria-hidden="true"></span>
+              Open Tournaments
+            </h2>
+            <button class="pulse-see-all" onclick="scrollToArena()">
+              See all in Arena →
+            </button>
+          </div>
+          <div class="pulse-list" id="pulseList" aria-label="Open tournament cards">
+            <div class="pulse-empty">Loading tournaments...</div>
+          </div>
+        </div>
+      </section>
 
       <!-- 
         - #BRAND
@@ -283,7 +410,7 @@
                     </h3>
 
                     <p class="card-price">
-                      Entry Fee : <span class="span">Free</span>
+                      Price : <span class="span">KES 1000</span>
                     </p>
 
                   </div>
@@ -308,7 +435,7 @@
                     </h3>
 
                     <p class="card-price">
-                      Entry Fee : <span class="span">$25.00</span>
+                      Price : <span class="span">KES 1,000</span>
                     </p>
 
                   </div>
@@ -333,7 +460,7 @@
                     </h3>
 
                     <p class="card-price">
-                      Entry Fee : <span class="span">$25.00</span>
+                      Price : <span class="span">KES 1000</span>
                     </p>
 
                   </div>
@@ -361,37 +488,83 @@
               Watch Live <span class="span">Match</span>
             </h2>
 
-            <figure class="live-match-banner img-holder" style="--width: 800; --height: 470;">
+            <!-- Live ticker bar -->
+            <div class="live-ticker-bar">
+              <span class="live-ticker-pulse"><span class="live-dot"></span> LIVE</span>
+              <div class="live-ticker-track" id="liveTickerTrack">
+                <div class="live-ticker-items" id="liveTickerItems">
+                  <!-- filled by JS -->
+                </div>
+              </div>
+            </div>
 
-              <img src="./assets/images/live-match-banner.jpg" width="800" height="470" loading="lazy"
-                alt="Live Match Video" class="img-cover">
-
-              <button class="play-btn" aria-label="play video">
-                <ion-icon name="play"></ion-icon>
-              </button>
-
-            </figure>
-
-            <div class="live-match-player">
-
-              <figure class="player player-1 img-holder" style="--width: 406; --height: 277;">
-                <img src="./assets/images/live-match-player-1.png" width="406" height="277" loading="lazy"
-                  alt="tokyo eagle" class="w-100">
+            <!-- Main match banner -->
+            <div class="live-main-banner" id="liveMainBanner">
+              <figure class="live-match-banner img-holder" style="--width: 800; --height: 470;">
+                <img src="./assets/images/live-match-banner.jpg" width="800" height="470" loading="lazy"
+                  alt="Live Match Video" class="img-cover" id="liveMatchBannerImg">
+                <div class="live-match-overlay">
+                  <span class="live-match-game-badge" id="liveMatchGame">PES / eFootball</span>
+                  <span class="live-match-prize-badge" id="liveMatchPrize">KES 1,200 Prize</span>
+                </div>
+                <button class="play-btn" aria-label="play video" id="livePlayBtn">
+                  <ion-icon name="play"></ion-icon>
+                </button>
               </figure>
+            </div>
 
-              <div class="live-match-detail">
+            <!-- Player vs Player -->
+            <div class="live-match-player" id="liveMatchPlayer">
 
-                <p class="live-match-subtitle">Upcoming Live Matches</p>
-
-                <time class="live-match-time" datetime="08:30">08:30</time>
-
+              <div class="live-player-card player-1">
+                <div class="lpc-avatar-ring">
+                  <img src="./assets/images/live-match-player-1.png" alt="Player 1" class="lpc-img" id="liveP1Img">
+                </div>
+                <div class="lpc-info">
+                  <p class="lpc-tag" id="liveP1Tag">Phin_KE</p>
+                  <p class="lpc-elo" id="liveP1Elo">ELO 1682</p>
+                  <p class="lpc-country">🇰🇪 Nairobi</p>
+                </div>
+                <div class="lpc-score" id="liveP1Score">0</div>
               </div>
 
-              <figure class="player player-2 img-holder" style="--width: 400; --height: 305;">
-                <img src="./assets/images/live-match-player-2.png" width="400" height="305" loading="lazy"
-                  alt="new york hunter7" class="w-100">
-              </figure>
+              <div class="live-match-detail">
+                <p class="live-match-subtitle" id="liveMatchSubtitle">PhinTech Arena Live</p>
+                <div class="live-vs-badge">VS</div>
+                <time class="live-match-time" id="liveMatchTime">00:00</time>
+                <p class="live-match-status" id="liveMatchStatus">LIVE NOW</p>
+                <div class="live-match-actions">
+                  <button class="live-action-btn" id="liveWatchBtn" onclick="openLiveStream()">
+                    <ion-icon name="play-circle-outline"></ion-icon> Watch
+                  </button>
+                  <button class="live-action-btn live-bet-btn" onclick="document.getElementById('arena').scrollIntoView({behavior:'smooth'})">
+                    <ion-icon name="trophy-outline"></ion-icon> Join Arena
+                  </button>
+                </div>
+              </div>
 
+              <div class="live-player-card player-2">
+                <div class="lpc-score lpc-score-right" id="liveP2Score">0</div>
+                <div class="lpc-info lpc-info-right">
+                  <p class="lpc-tag" id="liveP2Tag">Brian254</p>
+                  <p class="lpc-elo" id="liveP2Elo">ELO 1645</p>
+                  <p class="lpc-country">🇰🇪 Mombasa</p>
+                </div>
+                <div class="lpc-avatar-ring lpc-ring-right">
+                  <img src="./assets/images/live-match-player-2.png" alt="Player 2" class="lpc-img" id="liveP2Img">
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Upcoming matches queue -->
+            <div class="live-upcoming">
+              <h3 class="live-upcoming-title">
+                <ion-icon name="time-outline"></ion-icon> Up Next
+              </h3>
+              <div class="live-upcoming-list" id="liveUpcomingList">
+                <!-- filled by JS -->
+              </div>
             </div>
 
           </div>
@@ -453,9 +626,10 @@
 
                   <span class="card-meta">
                     <ion-icon name="notifications"></ion-icon>
-
                     <span class="span">Playstation 5, Xbox</span>
                   </span>
+
+                  <p class="featured-price">KES 1000</p>
 
                 </div>
 
@@ -480,7 +654,6 @@
 
                   <span class="card-meta">
                     <ion-icon name="notifications"></ion-icon>
-
                     <span class="span">Playstation 5, Xbox</span>
                   </span>
 
@@ -499,9 +672,10 @@
 
                   <span class="card-meta">
                     <ion-icon name="notifications"></ion-icon>
-
                     <span class="span">Playstation 5, Xbox</span>
                   </span>
+
+                  <p class="featured-price">KES 1,000</p>
 
                 </div>
 
@@ -526,7 +700,6 @@
 
                   <span class="card-meta">
                     <ion-icon name="notifications"></ion-icon>
-
                     <span class="span">Playstation 5, Xbox</span>
                   </span>
 
@@ -545,9 +718,10 @@
 
                   <span class="card-meta">
                     <ion-icon name="notifications"></ion-icon>
-
                     <span class="span">Playstation 5, Xbox</span>
                   </span>
+
+                  <p class="featured-price">KES 1000</p>
 
                 </div>
 
@@ -559,21 +733,20 @@
 
                 <figure class="card-banner img-holder" style="--width: 450; --height: 600;">
                   <img src="./assets/images/featured-game-4.jpg" width="450" height="600" loading="lazy"
-                    alt="Just for Gamers" class="img-cover">
+                    alt="Call of Duty" class="img-cover">
                 </figure>
 
                 <div class="card-content">
 
                   <h3 class="h3">
                     <a href="#" class="card-title" tabindex="-1">
-                      Just for <span class="span">Gamers</span>
+                      Call of <span class="span">Duty</span>
                     </a>
                   </h3>
 
                   <span class="card-meta">
                     <ion-icon name="notifications"></ion-icon>
-
-                    <span class="span">Playstation 5, Xbox</span>
+                    <span class="span">Playstation 5, Xbox, PC</span>
                   </span>
 
                 </div>
@@ -585,15 +758,16 @@
 
                   <h3 class="h3">
                     <a href="#" class="card-title">
-                      Just for <span class="span">Gamers</span>
+                      Call of <span class="span">Duty</span>
                     </a>
                   </h3>
 
                   <span class="card-meta">
                     <ion-icon name="notifications"></ion-icon>
-
-                    <span class="span">Playstation 5, Xbox</span>
+                    <span class="span">Playstation 5, Xbox, PC</span>
                   </span>
+
+                  <p class="featured-price">KES 1,000</p>
 
                 </div>
 
@@ -610,6 +784,91 @@
 
 
       <!-- 
+        - #IGDB GAMES BROWSER (RAWG API)
+      -->
+
+      <section class="section igdb-section" id="games" aria-label="games browser">
+        <div class="container">
+
+          <!-- Personalised recommendation banner (shown when logged in) -->
+          <div class="reco-banner" id="recoBanner" style="display:none;">
+            <ion-icon name="sparkles-outline" class="reco-icon"></ion-icon>
+            <span id="recoBannerLabel">Recommended for You</span>
+            <button class="reco-load-btn" id="recoLoadBtn">
+              Show Me <ion-icon name="arrow-forward-outline"></ion-icon>
+            </button>
+          </div>
+
+          <p class="section-subtitle">350,000+ Games · Powered by RAWG</p>
+
+          <h2 class="h2 section-title">
+            Browse All <span class="span">Video Games</span>
+          </h2>
+
+          <p class="section-text">
+            Explore the world's largest gaming database. All prices in KES — pay instantly via M-Pesa.
+          </p>
+
+          <!-- Tabs + Search + Platform -->
+          <div class="igdb-controls">
+
+            <div class="igdb-tabs" role="tablist">
+              <button class="igdb-tab-btn active" data-tab="top" role="tab" aria-selected="true">
+                <ion-icon name="trophy-outline"></ion-icon> Top Rated
+              </button>
+              <button class="igdb-tab-btn" data-tab="new" role="tab" aria-selected="false">
+                <ion-icon name="flash-outline"></ion-icon> New Releases
+              </button>
+            </div>
+
+            <div class="igdb-right-controls">
+
+              <select id="igdbPlatform" class="igdb-platform-select" aria-label="Filter by platform"></select>
+
+              <div class="igdb-search-wrap">
+                <ion-icon name="search-outline" class="igdb-search-icon"></ion-icon>
+                <input
+                  type="search"
+                  id="igdbSearch"
+                  placeholder="Search any game..."
+                  class="igdb-search-input"
+                  aria-label="Search games"
+                >
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Genre chips -->
+          <div class="igdb-genre-bar" id="igdbGenres" role="group" aria-label="Filter by genre"></div>
+
+          <!-- Loader -->
+          <div class="igdb-loader" id="igdbLoader" aria-live="polite">
+            <div class="igdb-spinner"></div>
+            <p>Loading games...</p>
+          </div>
+
+          <!-- Empty state -->
+          <p class="igdb-empty" id="igdbEmpty" style="display:none;">
+            No games found. Try a different search or filter.
+          </p>
+
+          <!-- Grid -->
+          <ul class="igdb-grid" id="igdbGrid"></ul>
+
+          <!-- Load More -->
+          <div class="igdb-loadmore-wrap">
+            <button class="btn skewBg igdb-loadmore-btn" id="igdbLoadMore" style="display:none;">
+              <ion-icon name="add-circle-outline"></ion-icon> Load More Games
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- 
         - #SHOP
       -->
 
@@ -622,8 +881,7 @@
           </h2>
 
           <p class="section-text">
-            Compete with 100 players on a remote island for winner takes showdown known issue where certain skin
-            strategic
+            Shop the best gaming gear in Kenya. Controllers, VR headsets, monitors, smartwatches and more — all priced in KES with M-Pesa accepted.
           </p>
 
           <ul class="has-scrollbar">
@@ -645,7 +903,7 @@
                   </h3>
 
                   <div class="card-wrapper">
-                    <p class="card-price">$29.00</p>
+                    <p class="card-price">KES 3,500</p>
 
                     <button class="card-btn">
                       <ion-icon name="basket"></ion-icon>
@@ -674,7 +932,7 @@
                   </h3>
 
                   <div class="card-wrapper">
-                    <p class="card-price">$29.00</p>
+                    <p class="card-price">KES 8,500</p>
 
                     <button class="card-btn">
                       <ion-icon name="basket"></ion-icon>
@@ -703,7 +961,7 @@
                   </h3>
 
                   <div class="card-wrapper">
-                    <p class="card-price">$29.00</p>
+                    <p class="card-price">KES 45,000</p>
 
                     <button class="card-btn">
                       <ion-icon name="basket"></ion-icon>
@@ -728,11 +986,185 @@
                   <a href="#" class="card-badge skewBg">VR-Box</a>
 
                   <h3 class="h3">
-                    <a href="#" class="card-title">Virtual Reality Smiled</a>
+                    <a href="#" class="card-title">Virtual Reality Headset</a>
                   </h3>
 
                   <div class="card-wrapper">
-                    <p class="card-price">$29.00</p>
+                    <p class="card-price">KES 12,000</p>
+
+                    <button class="card-btn">
+                      <ion-icon name="basket"></ion-icon>
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+            </li>
+
+            <li class="scrollbar-item">
+              <div class="shop-card">
+
+                <figure class="card-banner img-holder" style="--width: 300; --height: 260;">
+                  <img src="https://images.unsplash.com/photo-1599669454699-248893623440?w=300&h=260&fit=crop" width="300" height="260" loading="lazy"
+                    alt="Razer BlackShark V2 Gaming Headset" class="img-cover">
+                </figure>
+
+                <div class="card-content">
+
+                  <a href="#" class="card-badge skewBg">Headset</a>
+
+                  <h3 class="h3">
+                    <a href="#" class="card-title">Razer BlackShark V2 Headset</a>
+                  </h3>
+
+                  <div class="card-wrapper">
+                    <p class="card-price">KES 9,800</p>
+
+                    <button class="card-btn">
+                      <ion-icon name="basket"></ion-icon>
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+            </li>
+
+            <li class="scrollbar-item">
+              <div class="shop-card">
+
+                <figure class="card-banner img-holder" style="--width: 300; --height: 260;">
+                  <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=300&h=260&fit=crop" width="300" height="260" loading="lazy"
+                    alt="Mechanical RGB Gaming Keyboard" class="img-cover">
+                </figure>
+
+                <div class="card-content">
+
+                  <a href="#" class="card-badge skewBg">Keyboard</a>
+
+                  <h3 class="h3">
+                    <a href="#" class="card-title">Redragon K552 Mech Keyboard</a>
+                  </h3>
+
+                  <div class="card-wrapper">
+                    <p class="card-price">KES 6,200</p>
+
+                    <button class="card-btn">
+                      <ion-icon name="basket"></ion-icon>
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+            </li>
+
+            <li class="scrollbar-item">
+              <div class="shop-card">
+
+                <figure class="card-banner img-holder" style="--width: 300; --height: 260;">
+                  <img src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=300&h=260&fit=crop" width="300" height="260" loading="lazy"
+                    alt="Logitech G502 Gaming Mouse" class="img-cover">
+                </figure>
+
+                <div class="card-content">
+
+                  <a href="#" class="card-badge skewBg">Mouse</a>
+
+                  <h3 class="h3">
+                    <a href="#" class="card-title">Logitech G502 Hero Gaming Mouse</a>
+                  </h3>
+
+                  <div class="card-wrapper">
+                    <p class="card-price">KES 7,500</p>
+
+                    <button class="card-btn">
+                      <ion-icon name="basket"></ion-icon>
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+            </li>
+
+            <li class="scrollbar-item">
+              <div class="shop-card">
+
+                <figure class="card-banner img-holder" style="--width: 300; --height: 260;">
+                  <img src="https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=300&h=260&fit=crop" width="300" height="260" loading="lazy"
+                    alt="Racing Gaming Chair" class="img-cover">
+                </figure>
+
+                <div class="card-content">
+
+                  <a href="#" class="card-badge skewBg">Chair</a>
+
+                  <h3 class="h3">
+                    <a href="#" class="card-title">Pro Racing Gaming Chair</a>
+                  </h3>
+
+                  <div class="card-wrapper">
+                    <p class="card-price">KES 22,000</p>
+
+                    <button class="card-btn">
+                      <ion-icon name="basket"></ion-icon>
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+            </li>
+
+            <li class="scrollbar-item">
+              <div class="shop-card">
+
+                <figure class="card-banner img-holder" style="--width: 300; --height: 260;">
+                  <img src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=300&h=260&fit=crop" width="300" height="260" loading="lazy"
+                    alt="27-inch 144Hz Gaming Monitor" class="img-cover">
+                </figure>
+
+                <div class="card-content">
+
+                  <a href="#" class="card-badge skewBg">Monitor</a>
+
+                  <h3 class="h3">
+                    <a href="#" class="card-title">27" 144Hz Gaming Monitor</a>
+                  </h3>
+
+                  <div class="card-wrapper">
+                    <p class="card-price">KES 38,000</p>
+
+                    <button class="card-btn">
+                      <ion-icon name="basket"></ion-icon>
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+            </li>
+
+            <li class="scrollbar-item">
+              <div class="shop-card">
+
+                <figure class="card-banner img-holder" style="--width: 300; --height: 260;">
+                  <img src="https://images.unsplash.com/photo-1616588589676-62b3bd4ff6d2?w=300&h=260&fit=crop" width="300" height="260" loading="lazy"
+                    alt="Extended Gaming Mousepad XL" class="img-cover">
+                </figure>
+
+                <div class="card-content">
+
+                  <a href="#" class="card-badge skewBg">Mousepad</a>
+
+                  <h3 class="h3">
+                    <a href="#" class="card-title">XL RGB Gaming Mousepad</a>
+                  </h3>
+
+                  <div class="card-wrapper">
+                    <p class="card-price">KES 2,800</p>
 
                     <button class="card-btn">
                       <ion-icon name="basket"></ion-icon>
@@ -746,11 +1178,242 @@
 
           </ul>
 
+          <!-- View Full Shop CTA -->
+          <div class="shop-cta-wrap">
+            <p class="shop-cta-text">Showing a preview — we stock 50+ products across controllers, VR, monitors, smartwatches, audio &amp; more.</p>
+            <a href="./shop.html" class="btn skewBg shop-cta-btn">
+              <ion-icon name="storefront-outline"></ion-icon>
+              View Full Shop — 50+ Products
+            </a>
+          </div>
+
         </div>
       </section>
 
 
 
+
+
+      <!-- 
+        - #PHINTECH ARENA
+      -->
+
+      <section class="section arena-section" id="arena" aria-label="PhinTech Arena">
+        <div class="container">
+
+          <!-- Arena hero row — title + auth on one line -->
+          <div class="arena-hero-row">
+            <div class="arena-hero-title-wrap">
+              <span class="arena-eyebrow">Kenya's Esports Hub</span>
+              <h2 class="arena-hero-title">
+                <span class="arena-word phintech">PHINTECH</span>
+                <span class="arena-word arena-glow">ARENA</span>
+              </h2>
+            </div>
+
+            <!-- Auth bar pushed to right -->
+            <div class="arena-auth-bar">
+            <button class="arena-signin-btn" id="arenaSignInBtn">
+              <ion-icon name="person-circle-outline"></ion-icon> Sign In to Compete
+            </button>
+            <div class="arena-user-area" id="arenaUserArea" style="display:none;">
+              <div class="arena-notif-wrap">
+                <button class="arena-notif-btn" id="notifBell" aria-label="Notifications">
+                  <ion-icon name="notifications-outline"></ion-icon>
+                  <span class="arena-notif-badge" id="notifBadge" style="display:none;">0</span>
+                </button>
+                <div class="arena-notif-dropdown" id="notifDropdown">
+                  <p class="notif-header">Notifications</p>
+                  <div id="notifList"></div>
+                </div>
+              </div>
+              <button class="arena-user-btn" id="arenaUserBtn">
+                <img src="" alt="avatar" id="arenaUserAvatar" style="display:none;">
+                <ion-icon name="person-circle-outline" id="arenaDefaultAvatar"></ion-icon>
+                <span id="arenaUserName">Player</span>
+                <ion-icon name="chevron-down-outline"></ion-icon>
+              </button>
+              <button class="arena-signout-btn" id="signOutBtn" title="Sign Out">
+                <ion-icon name="log-out-outline"></ion-icon>
+              </button>
+            </div>
+          </div><!-- /.arena-hero-row -->
+
+          <p class="arena-tagline">
+            Compete in real-money tournaments for PES, FIFA/EA FC, Tekken, Mortal Kombat, Call of Duty and more. 
+            Register, pay via M-Pesa, play, and get paid.
+          </p>
+
+          <!-- Arena stats bar -->
+          <div class="arena-stats-bar">
+            <div class="arena-stat">
+              <span class="arena-stat-value" id="statTournaments">0</span>
+              <span class="arena-stat-label">Active Tournaments</span>
+            </div>
+            <div class="arena-stat">
+              <span class="arena-stat-value" id="statPlayers">0</span>
+              <span class="arena-stat-label">Registered Players</span>
+            </div>
+            <div class="arena-stat">
+              <span class="arena-stat-value" id="statPrize">KES 0</span>
+              <span class="arena-stat-label">Total Prize Pool</span>
+            </div>
+            <div class="arena-stat">
+              <span class="arena-stat-value" id="statMatches">0</span>
+              <span class="arena-stat-label">Matches Played</span>
+            </div>
+          </div>
+
+          <!-- Arena tabs -->
+          <div class="arena-tabs">
+            <button class="arena-tab-btn active" data-atab="tournaments">
+              <ion-icon name="trophy-outline"></ion-icon> Tournaments
+            </button>
+            <button class="arena-tab-btn" data-atab="bracket">
+              <ion-icon name="git-branch-outline"></ion-icon> Bracket
+            </button>
+            <button class="arena-tab-btn" data-atab="leaderboard">
+              <ion-icon name="bar-chart-outline"></ion-icon> Leaderboard
+            </button>
+            <button class="arena-tab-btn" data-atab="results">
+              <ion-icon name="checkmark-done-outline"></ion-icon> Submit Result
+            </button>
+          </div>
+
+          <!-- TOURNAMENTS PANEL -->
+          <div class="arena-panel" id="atab-tournaments">
+            <div class="arena-filter-bar">
+              <select id="arenaGameFilter" class="igdb-platform-select arena-select">
+                <option value="">All Games</option>
+                <option value="PES / eFootball">PES / eFootball</option>
+                <option value="FIFA / EA FC">FIFA / EA FC</option>
+                <option value="Tekken 8">Tekken 8</option>
+                <option value="Mortal Kombat 1">Mortal Kombat 1</option>
+                <option value="Call of Duty">Call of Duty</option>
+                <option value="NBA 2K">NBA 2K</option>
+                <option value="Street Fighter 6">Street Fighter 6</option>
+              </select>
+              <select id="arenaStatusFilter" class="igdb-platform-select arena-select">
+                <option value="">All Status</option>
+                <option value="open">Open</option>
+                <option value="ongoing">Ongoing</option>
+                <option value="completed">Completed</option>
+              </select>
+              <button class="arena-host-btn" onclick="openHostModal()">
+                <ion-icon name="add-circle-outline"></ion-icon> Host Tournament
+              </button>
+            </div>
+            <div class="tournament-grid" id="tournamentGrid"></div>
+          </div>
+
+          <!-- BRACKET PANEL -->
+          <div class="arena-panel" id="atab-bracket" style="display:none;">
+            <div class="bracket-select-bar">
+              <label class="bracket-label" for="bracketSelect">Select Tournament:</label>
+              <select id="bracketSelect" class="igdb-platform-select">
+                <option value="">-- Choose a tournament --</option>
+              </select>
+            </div>
+            <div id="bracketContainer" class="bracket-container">
+              <p class="bracket-placeholder">
+                <ion-icon name="git-branch-outline"></ion-icon>
+                Select a tournament above to view its bracket.
+              </p>
+            </div>
+          </div>
+
+          <!-- LEADERBOARD PANEL -->
+          <div class="arena-panel" id="atab-leaderboard" style="display:none;">
+            <div class="leaderboard-header">
+              <h3 class="leaderboard-title">
+                <ion-icon name="flame-outline"></ion-icon> Kenya ELO Rankings
+              </h3>
+              <select id="leaderboardGameFilter" class="igdb-platform-select">
+                <option value="">All Games</option>
+                <option value="PES / eFootball">PES / eFootball</option>
+                <option value="FIFA / EA FC">FIFA / EA FC</option>
+                <option value="Tekken 8">Tekken 8</option>
+                <option value="Mortal Kombat 1">Mortal Kombat 1</option>
+                <option value="Call of Duty">Call of Duty</option>
+              </select>
+            </div>
+            <div class="leaderboard-table-wrap">
+              <table class="leaderboard-table" id="leaderboardTable">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Player</th>
+                    <th>Game</th>
+                    <th>ELO</th>
+                    <th>W</th>
+                    <th>L</th>
+                    <th>Win%</th>
+                    <th>Prize Won</th>
+                  </tr>
+                </thead>
+                <tbody id="leaderboardBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- SUBMIT RESULT PANEL -->
+          <div class="arena-panel" id="atab-results" style="display:none;">
+            <div class="result-intro">
+              <ion-icon name="shield-checkmark-outline"></ion-icon>
+              <div>
+                <strong>Submit Match Result</strong>
+                <p>Both players must submit. Scores are auto-verified. Disputes go to admin.</p>
+              </div>
+            </div>
+            <form class="result-form" id="resultForm" novalidate>
+              <div class="result-form-grid">
+                <div class="visit-field">
+                  <label for="resultTournament"><ion-icon name="trophy-outline"></ion-icon> Tournament</label>
+                  <select id="resultTournament" class="visit-input" required>
+                    <option value="">-- Select tournament --</option>
+                  </select>
+                </div>
+                <div class="visit-field">
+                  <label for="resultMatchId"><ion-icon name="git-branch-outline"></ion-icon> Match / Round</label>
+                  <input type="text" id="resultMatchId" class="visit-input" placeholder="e.g. Round 2 Match 3" required>
+                </div>
+                <div class="visit-field">
+                  <label for="resultYourTag"><ion-icon name="person-outline"></ion-icon> Your Gamer Tag</label>
+                  <input type="text" id="resultYourTag" class="visit-input" placeholder="e.g. Phin_KE" required>
+                </div>
+                <div class="visit-field">
+                  <label for="resultOpponentTag"><ion-icon name="person-outline"></ion-icon> Opponent Tag</label>
+                  <input type="text" id="resultOpponentTag" class="visit-input" placeholder="e.g. Brian254" required>
+                </div>
+                <div class="visit-field">
+                  <label for="resultYourScore"><ion-icon name="trophy-outline"></ion-icon> Your Score</label>
+                  <input type="number" id="resultYourScore" class="visit-input" min="0" max="99" placeholder="3" required>
+                </div>
+                <div class="visit-field">
+                  <label for="resultOppScore"><ion-icon name="trophy-outline"></ion-icon> Opponent Score</label>
+                  <input type="number" id="resultOppScore" class="visit-input" min="0" max="99" placeholder="1" required>
+                </div>
+              </div>
+              <div class="visit-field">
+                <label><ion-icon name="camera-outline"></ion-icon> Screenshot <span style="color:var(--roman-silver);font-size:1.1rem;">(optional — helps resolve disputes)</span></label>
+                <div class="screenshot-upload-wrap" id="screenshotDropZone">
+                  <input type="file" id="resultScreenshotFile" accept="image/*" aria-label="Upload screenshot">
+                  <ion-icon name="cloud-upload-outline" class="screenshot-upload-icon"></ion-icon>
+                  <p class="screenshot-upload-label">Drag &amp; drop or <strong>tap to upload</strong> a screenshot<br><small>JPG, PNG, WebP · max 5 MB</small></p>
+                  <img id="screenshotPreview" class="screenshot-preview" src="" alt="Screenshot preview" style="display:none;">
+                </div>
+                <p style="color:var(--roman-silver);font-size:1.1rem;margin-block-start:6px;">Or paste a URL instead:</p>
+                <input type="url" id="resultScreenshot" class="visit-input" placeholder="https://..." style="margin-block-start:4px;">
+              </div>
+              <p class="visit-status" id="resultStatus"></p>
+              <button type="submit" class="gm-buy-btn">
+                <ion-icon name="checkmark-circle-outline"></ion-icon> Submit Result
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </section>
 
 
       <!-- 
@@ -765,8 +1428,7 @@
           </h2>
 
           <p class="section-text">
-            Compete With 100 Players On A Remote Island For Winner Takes Showdown Known Issue Where Certain Skin
-            Strategic
+            Stay ahead of the game with the latest gaming news, reviews, and tips from Kenya's top gaming community.
           </p>
 
           <ul class="blog-list">
@@ -802,7 +1464,7 @@
                   </h3>
 
                   <p class="card-text">
-                    Compete With 100 Players On A Remote Island Thats Winner Takes Showdown Known Issue.
+                    Top first-person shooter action — intense multiplayer battles across Kenya's fastest growing gaming community. Weekly tournaments available.
                   </p>
 
                   <a href="#" class="card-link">
@@ -847,7 +1509,7 @@
                   </h3>
 
                   <p class="card-text">
-                    Compete With 100 Players On A Remote Island Thats Winner Takes Showdown Known Issue.
+                    Survive the apocalypse in one of the most gripping zombie survival games. Available now from KES 1000 — pay via M-Pesa.
                   </p>
 
                   <a href="#" class="card-link">
@@ -892,7 +1554,7 @@
                   </h3>
 
                   <p class="card-text">
-                    Compete With 100 Players On A Remote Island Thats Winner Takes Showdown Known Issue.
+                    The legendary MOBA that defined esports. Join Kenyan DOTA 2 teams and compete in regional tournaments for real prizes.
                   </p>
 
                   <a href="#" class="card-link">
@@ -968,10 +1630,10 @@
 
         <div class="footer-brand">
 
-          <a href="#" class="logo">Gamics</a>
+          <a href="#" class="logo">PHINTECH ARENA</a>
 
           <p class="footer-text">
-            Gamics marketplace the relase etras thats sheets continig passag.
+            Kenya's premier gaming marketplace. Buy, play and win — from indie titles to AAA blockbusters, all priced in KES with M-Pesa support.
           </p>
 
           <ul class="contact-list">
@@ -982,7 +1644,7 @@
               </div>
 
               <address class="item-text">
-                Address : PO Box W75 Street lan West new queens
+                Nairobi, Kenya — Westlands Business District
               </address>
             </li>
 
@@ -991,7 +1653,7 @@
                 <ion-icon name="headset"></ion-icon>
               </div>
 
-              <a href="tel:+241245654235" class="item-text">Phone : +24 1245 654 235</a>
+              <a href="tel:+254700000000" class="item-text">Phone : +254 700 000 000</a>
             </li>
 
             <li class="contact-item">
@@ -999,12 +1661,26 @@
                 <ion-icon name="mail-open"></ion-icon>
               </div>
 
-              <a href="mailto:info@exemple.com" class="item-text">Email : info@exemple.com</a>
+              <a href="mailto:info@phintech arena.co.ke" class="item-text">Email : info@phintech arena.co.ke</a>
             </li>
 
           </ul>
 
         </div>
+
+        <ul class="footer-list">
+
+          <li>
+            <p class="footer-list-title">About</p>
+          </li>
+
+          <li>
+            <p style="font-size:1.3rem; font-weight:500; line-height:1.8; color: var(--roman-silver);">
+              Developed and maintained by <a href="https://phintechsolutions.com" class="copyright-link" target="_blank" rel="noopener">PhinTech Solutions</a>, a Kenyan technology company focused on software engineering, cybersecurity, SaaS solutions, automation, and digital transformation.
+            </p>
+          </li>
+
+        </ul>
 
         <ul class="footer-list">
 
@@ -1118,11 +1794,22 @@
       </div>
     </div>
 
+    <!-- PhinTech Solutions powered-by banner -->
+    <div class="phintech-banner">
+      <div class="container">
+        <p class="phintech-text">
+          <ion-icon name="flash"></ion-icon>
+          Powered by <a href="https://phintechsolutions.com" target="_blank" rel="noopener">PhinTech Solutions</a> &mdash; Built in Kenya
+        </p>
+      </div>
+    </div>
+
     <div class="footer-bottom">
       <div class="container">
 
         <p class="copyright">
-          &copy; 2022 Gamics. All Right Reserved by <a href="#" class="copyright-link">codewithsadee</a>
+          &copy; 2026 PHINTECH ARENA. All Rights Reserved &mdash;
+          <a href="https://phintechsolutions.com" class="copyright-link" target="_blank" rel="noopener">Powered by PhinTech Solutions &mdash; Built in Kenya</a>
         </p>
 
         <img src="./assets/images/footer-bottom-img.png" width="340" height="21" loading="lazy" alt=""
@@ -1149,16 +1836,1325 @@
 
 
 
+  <!--
+    - #AUTH MODAL
+  -->
+
+  <div class="modal-overlay" id="authModal" role="dialog" aria-modal="true" aria-label="Sign in">
+    <div class="install-modal-box auth-modal-box">
+      <button class="gm-close-btn" id="authModalClose" aria-label="Close">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+
+      <div class="install-modal-header">
+        <ion-icon name="game-controller-outline" class="install-icon"></ion-icon>
+        <h2 class="install-title">Join <span>PhinTech Arena</span></h2>
+        <p style="color:var(--roman-silver);font-size:1.3rem;margin-block-start:6px;">
+          Sign in to register for tournaments, track your ELO, and get match notifications.
+        </p>
+      </div>
+
+      <!-- Auth method tabs -->
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" data-authtab="social" role="tab" aria-selected="true">
+          <ion-icon name="flash-outline"></ion-icon> Quick
+        </button>
+        <button class="auth-tab" data-authtab="email" role="tab" aria-selected="false">
+          <ion-icon name="mail-outline"></ion-icon> Email
+        </button>
+        <button class="auth-tab" data-authtab="phone" role="tab" aria-selected="false">
+          <ion-icon name="phone-portrait-outline"></ion-icon> Phone
+        </button>
+      </div>
+
+      <!-- TAB: Social / Quick -->
+      <div class="auth-tab-panel" id="authtab-social">
+        <!-- Google Sign In -->
+        <button class="auth-google-btn" id="googleSignInBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          Continue with Google
+        </button>
+
+        <div class="auth-divider"><span>or magic link</span></div>
+
+        <!-- Magic Link -->
+        <div class="auth-magic-wrap">
+          <div class="auth-magic-row">
+            <input type="email" id="magicLinkEmail" class="visit-input"
+              placeholder="your@email.com" aria-label="Email address for magic link">
+            <button class="auth-magic-btn" id="magicLinkBtn">
+              <ion-icon name="paper-plane-outline"></ion-icon> Send Link
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Email / Password -->
+      <div class="auth-tab-panel" id="authtab-email" style="display:none;">
+        <!-- Sign In / Sign Up toggle -->
+        <div class="auth-sub-tabs">
+          <button class="auth-sub-tab active" data-emailmode="signin" id="emailSignInTab">Sign In</button>
+          <button class="auth-sub-tab" data-emailmode="signup" id="emailSignUpTab">Create Account</button>
+        </div>
+
+        <div id="emailSignInForm">
+          <div class="visit-field" style="margin-block-start:14px;">
+            <label for="epEmail"><ion-icon name="mail-outline"></ion-icon> Email</label>
+            <input type="email" id="epEmail" class="visit-input" placeholder="your@email.com" autocomplete="email">
+          </div>
+          <div class="visit-field">
+            <label for="epPassword"><ion-icon name="lock-closed-outline"></ion-icon> Password</label>
+            <div class="auth-pw-wrap">
+              <input type="password" id="epPassword" class="visit-input" placeholder="Password" autocomplete="current-password">
+              <button type="button" class="auth-pw-toggle" id="epPwToggle" aria-label="Show/hide password">
+                <ion-icon name="eye-outline"></ion-icon>
+              </button>
+            </div>
+          </div>
+          <button class="gm-buy-btn" id="epSignInBtn" style="width:100%;margin-block-start:12px;">
+            <ion-icon name="log-in-outline"></ion-icon> Sign In
+          </button>
+          <button type="button" class="auth-forgot-btn" id="epForgotBtn">Forgot password?</button>
+        </div>
+
+        <div id="emailSignUpForm" style="display:none;">
+          <div class="visit-field" style="margin-block-start:14px;">
+            <label for="epSignUpEmail"><ion-icon name="mail-outline"></ion-icon> Email</label>
+            <input type="email" id="epSignUpEmail" class="visit-input" placeholder="your@email.com" autocomplete="email">
+          </div>
+          <div class="visit-field">
+            <label for="epSignUpPassword"><ion-icon name="lock-closed-outline"></ion-icon> Password</label>
+            <div class="auth-pw-wrap">
+              <input type="password" id="epSignUpPassword" class="visit-input" placeholder="Min 8 characters" autocomplete="new-password">
+              <button type="button" class="auth-pw-toggle" id="epSignUpPwToggle" aria-label="Show/hide password">
+                <ion-icon name="eye-outline"></ion-icon>
+              </button>
+            </div>
+          </div>
+          <div class="visit-field">
+            <label for="epSignUpConfirm"><ion-icon name="lock-closed-outline"></ion-icon> Confirm Password</label>
+            <input type="password" id="epSignUpConfirm" class="visit-input" placeholder="Repeat password" autocomplete="new-password">
+          </div>
+          <!-- Invite code on sign-up -->
+          <div class="visit-field">
+            <label for="epInviteCode"><ion-icon name="gift-outline"></ion-icon> Invite Code <span style="color:var(--roman-silver);font-size:1.1rem;">(optional — earn 20 pts)</span></label>
+            <div class="auth-invite-row">
+              <input type="text" id="epInviteCode" class="visit-input" placeholder="e.g. PHIN-A3X9K" maxlength="10" style="text-transform:uppercase;">
+              <button type="button" class="auth-invite-check-btn" id="epInviteCheckBtn" title="Validate code">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+              </button>
+            </div>
+            <p class="auth-invite-hint" id="epInviteHint"></p>
+          </div>
+          <button class="gm-buy-btn" id="epSignUpBtn" style="width:100%;margin-block-start:12px;">
+            <ion-icon name="person-add-outline"></ion-icon> Create Account
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB: Phone / OTP -->
+      <div class="auth-tab-panel" id="authtab-phone" style="display:none;">
+        <div id="phoneInputStep">
+          <p style="color:var(--roman-silver);font-size:1.25rem;margin-block-end:12px;">Enter your Safaricom number to receive an OTP via SMS.</p>
+          <div class="visit-field">
+            <label for="otpPhone"><ion-icon name="phone-portrait-outline"></ion-icon> Phone Number</label>
+            <input type="tel" id="otpPhone" class="visit-input" placeholder="+254 7XX XXX XXX" autocomplete="tel">
+          </div>
+          <!-- Invite code on phone sign-up -->
+          <div class="visit-field">
+            <label for="phoneInviteCode"><ion-icon name="gift-outline"></ion-icon> Invite Code <span style="color:var(--roman-silver);font-size:1.1rem;">(optional — earn 20 pts)</span></label>
+            <div class="auth-invite-row">
+              <input type="text" id="phoneInviteCode" class="visit-input" placeholder="e.g. PHIN-A3X9K" maxlength="10" style="text-transform:uppercase;">
+              <button type="button" class="auth-invite-check-btn" id="phoneInviteCheckBtn" title="Validate code">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+              </button>
+            </div>
+            <p class="auth-invite-hint" id="phoneInviteHint"></p>
+          </div>
+          <button class="gm-buy-btn" id="otpSendBtn" style="width:100%;margin-block-start:12px;">
+            <ion-icon name="chatbubble-outline"></ion-icon> Send OTP
+          </button>
+        </div>
+
+        <div id="phoneOtpStep" style="display:none;">
+          <p style="color:var(--roman-silver);font-size:1.25rem;margin-block-end:12px;">Enter the 6-digit OTP sent to <strong id="otpPhoneDisplay"></strong></p>
+          <div class="visit-field">
+            <label for="otpCode"><ion-icon name="keypad-outline"></ion-icon> OTP Code</label>
+            <input type="text" id="otpCode" class="visit-input" placeholder="123456" maxlength="6" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code">
+          </div>
+          <button class="gm-buy-btn" id="otpVerifyBtn" style="width:100%;margin-block-start:12px;">
+            <ion-icon name="shield-checkmark-outline"></ion-icon> Verify OTP
+          </button>
+          <button type="button" class="auth-forgot-btn" id="otpResendBtn">Resend OTP</button>
+        </div>
+      </div>
+
+      <p class="auth-status visit-status" id="authStatus"></p>
+
+      <p class="auth-terms">
+        By signing in you agree to PhinTech Arena's rules. Play fair, respect opponents.
+        <a href="https://phintechsolutions.com" target="_blank" rel="noopener" class="install-link">PhinTech Solutions</a>
+      </p>
+    </div>
+  </div>
+
+
+  <!--
+    - #PROFILE SETUP MODAL (shown after first sign in)
+  -->
+
+  <div class="modal-overlay" id="profileSetupModal" role="dialog" aria-modal="true">
+    <div class="install-modal-box">
+      <button class="gm-close-btn" id="profileSetupModalClose" aria-label="Close">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+      <div class="install-modal-header">
+        <ion-icon name="person-add-outline" class="install-icon"></ion-icon>
+        <h2 class="install-title">Set Up Your <span>Profile</span></h2>
+        <p style="color:var(--roman-silver);font-size:1.3rem;margin-block-start:6px;">
+          Complete your profile to join tournaments and appear on the leaderboard.
+        </p>
+      </div>
+      <form id="setupForm" novalidate>
+        <div class="result-form-grid">
+          <div class="visit-field">
+            <label for="su_gamer_tag"><ion-icon name="game-controller-outline"></ion-icon> Gamer Tag *</label>
+            <input type="text" id="su_gamer_tag" class="visit-input" placeholder="e.g. Phin_KE" required>
+          </div>
+          <div class="visit-field">
+            <label for="su_phone"><ion-icon name="phone-portrait-outline"></ion-icon> M-Pesa Number *</label>
+            <input type="tel" id="su_phone" class="visit-input" placeholder="+254 7XX XXX XXX" required>
+          </div>
+          <div class="visit-field">
+            <label for="su_full_name"><ion-icon name="person-outline"></ion-icon> Full Name</label>
+            <input type="text" id="su_full_name" class="visit-input" placeholder="Your name">
+          </div>
+          <div class="visit-field">
+            <label for="su_county"><ion-icon name="location-outline"></ion-icon> County</label>
+            <input type="text" id="su_county" class="visit-input" placeholder="e.g. Nairobi">
+          </div>
+        </div>
+        <div class="visit-field">
+          <label for="su_platform_id"><ion-icon name="desktop-outline"></ion-icon> PSN / Xbox GT / Steam ID</label>
+          <input type="text" id="su_platform_id" class="visit-input" placeholder="e.g. Phin_KE on PSN">
+        </div>
+
+        <!-- Gender picker -->
+        <div class="visit-field">
+          <label><ion-icon name="people-outline"></ion-icon> I am a</label>
+          <div class="gender-picker" id="setupGenderPicker">
+            <button type="button" class="gender-btn" data-gender="male">
+              <span class="gender-emoji">🎮</span> Male Gamer
+            </button>
+            <button type="button" class="gender-btn" data-gender="female">
+              <span class="gender-emoji">🎮</span> Female Gamer
+            </button>
+            <button type="button" class="gender-btn" data-gender="other">
+              <span class="gender-emoji">🎮</span> Prefer not to say
+            </button>
+          </div>
+          <input type="hidden" id="su_gender" value="">
+        </div>
+
+        <!-- Avatar picker -->
+        <div class="visit-field">
+          <label><ion-icon name="image-outline"></ion-icon> Pick Your Gamer Avatar</label>
+          <div class="setup-avatar-grid" id="setupAvatarGrid">
+            <!-- filled by JS -->
+          </div>
+          <input type="hidden" id="su_avatar_url" value="">
+        </div>
+
+        <!-- Preferred game genre -->
+        <div class="visit-field">
+          <label for="su_preferred_genre"><ion-icon name="game-controller-outline"></ion-icon> Favourite Game Type</label>
+          <select id="su_preferred_genre" class="visit-input">
+            <option value="">-- Pick your style --</option>
+            <option value="action">Action / Shooter</option>
+            <option value="sports">Sports (FIFA, PES, NBA)</option>
+            <option value="fighting">Fighting (Tekken, MK, SF)</option>
+            <option value="rpg">RPG / Adventure</option>
+            <option value="strategy">Strategy / Puzzle</option>
+            <option value="racing">Racing</option>
+            <option value="horror">Horror / Survival</option>
+          </select>
+        </div>
+
+        <!-- Invite code field (shown during setup if not applied yet) -->
+        <div class="visit-field" id="suInviteCodeWrap">
+          <label for="su_invite_code"><ion-icon name="gift-outline"></ion-icon> Got an Invite Code? <span style="color:var(--roman-silver);font-size:1.1rem;">(earn 20 bonus points)</span></label>
+          <div class="auth-invite-row">
+            <input type="text" id="su_invite_code" class="visit-input" placeholder="e.g. PHIN-A3X9K" maxlength="10" style="text-transform:uppercase;">
+            <button type="button" class="auth-invite-check-btn" id="suInviteCheckBtn" title="Validate code">
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+            </button>
+          </div>
+          <p class="auth-invite-hint" id="suInviteHint"></p>
+        </div>
+
+        <p class="visit-status" id="suSaveStatus"></p>
+        <button type="submit" class="gm-buy-btn" id="suSaveBtn" style="margin-block-start:16px;">
+          <ion-icon name="checkmark-circle-outline"></ion-icon> Save Profile &amp; Start Playing
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+  <!--
+    - #PROFILE MODAL (my account) - full gamer profile screen
+  -->
+
+  <div class="modal-overlay gm-overlay" id="profileModal" role="dialog" aria-modal="true" aria-label="Gamer Profile">
+    <div class="gp-modal">
+      <button class="gm-close-btn gp-close" id="profileModalClose" aria-label="Close"><ion-icon name="close-outline"></ion-icon></button>
+      <div class="gp-hero">
+        <div class="gp-hero-bg" id="gpHeroBg"></div>
+        <div class="gp-hero-content">
+          <div class="gp-avatar-wrap" id="gpAvatarWrap">
+            <img src="" alt="" id="gpAvatar" class="gp-avatar-img">
+            <span class="gp-avatar-fallback" id="gpAvatarFallback">?</span>
+            <div class="gp-avatar-ring-outer"></div>
+          </div>
+          <div class="gp-hero-info">
+            <h2 class="gp-tag" id="gpTag">Loading...</h2>
+            <div class="gp-rank-badge" id="gpRankBadge">🎮 Unranked</div>
+            <p class="gp-email" id="gpEmailDisplay"></p>
+          </div>
+        </div>
+        <div class="gp-xp-bar-wrap">
+          <div class="gp-xp-label"><span id="gpXpLabel">XP to next rank</span><span id="gpXpPct">0%</span></div>
+          <div class="gp-xp-track"><div class="gp-xp-fill" id="gpXpFill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="gp-stats-row">
+        <div class="gp-stat-card"><ion-icon name="flash-outline"></ion-icon><span class="gp-stat-num" id="gpElo">1500</span><span class="gp-stat-lbl">ELO</span></div>
+        <div class="gp-stat-card"><ion-icon name="trophy-outline"></ion-icon><span class="gp-stat-num" id="gpWins">0</span><span class="gp-stat-lbl">Wins</span></div>
+        <div class="gp-stat-card"><ion-icon name="game-controller-outline"></ion-icon><span class="gp-stat-num" id="gpTourns">0</span><span class="gp-stat-lbl">Tourneys</span></div>
+        <div class="gp-stat-card"><ion-icon name="cash-outline"></ion-icon><span class="gp-stat-num" id="gpPrize">KES 0</span><span class="gp-stat-lbl">Prize</span></div>
+      </div>
+      <div class="gp-tabs">
+        <button class="gp-tab active" data-gptab="overview"     onclick="switchGPTab('overview')"><ion-icon name="home-outline"></ion-icon> Overview</button>
+        <button class="gp-tab"        data-gptab="achievements"  onclick="switchGPTab('achievements')"><ion-icon name="medal-outline"></ion-icon> Badges</button>
+        <button class="gp-tab"        data-gptab="tournaments"   onclick="switchGPTab('tournaments')"><ion-icon name="trophy-outline"></ion-icon> Tourneys</button>
+        <button class="gp-tab"        data-gptab="settings"      onclick="switchGPTab('settings')"><ion-icon name="settings-outline"></ion-icon> Settings</button>
+        <button class="gp-tab"        data-gptab="referrals"     onclick="switchGPTab('referrals')"><ion-icon name="gift-outline"></ion-icon> Invite</button>
+        <button class="gp-tab gp-tab--admin" data-gptab="wallet" onclick="switchGPTab('wallet')" id="gpWalletTab" style="display:none;"><ion-icon name="wallet-outline"></ion-icon> Wallet</button>
+      </div>
+      <div class="gp-body">
+
+        <div class="gp-panel" id="gptab-overview">
+          <div class="gp-section">
+            <h3 class="gp-section-title"><ion-icon name="podium-outline"></ion-icon> Rank Journey</h3>
+            <div class="gp-rank-track">
+              <div class="gp-rank-step" data-rank="unranked"><span class="gp-rank-icon">🎮</span><span class="gp-rank-name">Unranked</span><span class="gp-rank-req">0</span></div>
+              <div class="gp-rank-line"></div>
+              <div class="gp-rank-step" data-rank="bronze"><span class="gp-rank-icon">&#129350;</span><span class="gp-rank-name">Bronze</span><span class="gp-rank-req">1500</span></div>
+              <div class="gp-rank-line"></div>
+              <div class="gp-rank-step" data-rank="silver"><span class="gp-rank-icon">&#129351;</span><span class="gp-rank-name">Silver</span><span class="gp-rank-req">1550</span></div>
+              <div class="gp-rank-line"></div>
+              <div class="gp-rank-step" data-rank="gold"><span class="gp-rank-icon">&#129352;</span><span class="gp-rank-name">Gold</span><span class="gp-rank-req">1650</span></div>
+              <div class="gp-rank-line"></div>
+              <div class="gp-rank-step" data-rank="diamond"><span class="gp-rank-icon">&#128142;</span><span class="gp-rank-name">Diamond</span><span class="gp-rank-req">1800</span></div>
+              <div class="gp-rank-line"></div>
+              <div class="gp-rank-step" data-rank="grandmaster"><span class="gp-rank-icon">&#128081;</span><span class="gp-rank-name">Grand Master</span><span class="gp-rank-req">2000</span></div>
+            </div>
+          </div>
+          <div class="gp-section">
+            <h3 class="gp-section-title"><ion-icon name="time-outline"></ion-icon> Recent Activity</h3>
+            <div id="gpActivity" class="gp-activity-list"><p class="gp-empty">No recent activity. Join a tournament to get started!</p></div>
+          </div>
+        </div>
+
+        <div class="gp-panel" id="gptab-achievements" style="display:none;">
+          <div class="gp-section">
+            <h3 class="gp-section-title"><ion-icon name="ribbon-outline"></ion-icon> Earned Badges</h3>
+            <div class="gp-badge-grid" id="gpBadgeGrid"></div>
+          </div>
+          <div class="gp-section">
+            <h3 class="gp-section-title" style="opacity:0.5;"><ion-icon name="lock-closed-outline"></ion-icon> Locked Badges</h3>
+            <div class="gp-badge-grid" id="gpLockedBadgeGrid"></div>
+          </div>
+        </div>
+
+        <div class="gp-panel" id="gptab-tournaments" style="display:none;">
+          <div id="gpTournamentsList" class="gp-tourns-list"><p class="gp-empty">Loading your tournaments...</p></div>
+        </div>
+
+        <div class="gp-panel" id="gptab-settings" style="display:none;">
+          <form id="profileForm" novalidate>
+            <div class="gp-section">
+              <h3 class="gp-section-title"><ion-icon name="person-circle-outline"></ion-icon> Gamer Avatar</h3>
+              <div class="setup-avatar-grid" id="profileAvatarGrid"></div>
+              <input type="hidden" id="pm_avatar_url" value="">
+            </div>
+            <div class="gp-section">
+              <h3 class="gp-section-title"><ion-icon name="people-outline"></ion-icon> I Am A</h3>
+              <div class="gender-picker" id="profileGenderPicker">
+                <button type="button" class="gender-btn" data-gender="male">&#127918; Male Gamer</button>
+                <button type="button" class="gender-btn" data-gender="female">&#127918; Female Gamer</button>
+                <button type="button" class="gender-btn" data-gender="other">&#127918; Prefer not to say</button>
+              </div>
+              <input type="hidden" id="pm_gender" value="">
+            </div>
+            <div class="gp-section">
+              <h3 class="gp-section-title"><ion-icon name="create-outline"></ion-icon> Profile Info</h3>
+              <div class="result-form-grid">
+                <div class="visit-field"><label for="pm_gamer_tag"><ion-icon name="game-controller-outline"></ion-icon> Gamer Tag</label><input type="text" id="pm_gamer_tag" class="visit-input" placeholder="e.g. Phin_KE"></div>
+                <div class="visit-field"><label for="pm_phone"><ion-icon name="phone-portrait-outline"></ion-icon> M-Pesa</label><input type="tel" id="pm_phone" class="visit-input" placeholder="+254 7XX XXX XXX"></div>
+                <div class="visit-field"><label for="pm_full_name"><ion-icon name="person-outline"></ion-icon> Full Name</label><input type="text" id="pm_full_name" class="visit-input" placeholder="Your name"></div>
+                <div class="visit-field"><label for="pm_county"><ion-icon name="location-outline"></ion-icon> County</label><input type="text" id="pm_county" class="visit-input" placeholder="e.g. Nairobi"></div>
+              </div>
+              <div class="visit-field"><label for="pm_platform_id"><ion-icon name="desktop-outline"></ion-icon> PSN / Xbox GT / Steam ID</label><input type="text" id="pm_platform_id" class="visit-input" placeholder="e.g. Phin_KE on PSN"></div>
+              <div class="visit-field">
+                <label for="pm_preferred_genre"><ion-icon name="game-controller-outline"></ion-icon> Favourite Game Type</label>
+                <select id="pm_preferred_genre" class="visit-input">
+                  <option value="">-- Pick your style --</option>
+                  <option value="action">Action / Shooter</option>
+                  <option value="sports">Sports (FIFA, PES, NBA)</option>
+                  <option value="fighting">Fighting (Tekken, MK, SF)</option>
+                  <option value="rpg">RPG / Adventure</option>
+                  <option value="strategy">Strategy / Puzzle</option>
+                  <option value="racing">Racing</option>
+                  <option value="horror">Horror / Survival</option>
+                </select>
+              </div>
+            </div>
+            <div class="gp-section">
+              <h3 class="gp-section-title"><ion-icon name="notifications-outline"></ion-icon> Notifications</h3>
+              <div class="gp-toggle-row">
+                <div><p class="gp-toggle-label">Email Notifications</p><p class="gp-toggle-desc">Tournament reminders, match results</p></div>
+                <label class="gp-toggle"><input type="checkbox" id="pm_email_notify" checked><span class="gp-toggle-slider"></span></label>
+              </div>
+              <div class="gp-toggle-row">
+                <div><p class="gp-toggle-label">WhatsApp / SMS</p><p class="gp-toggle-desc">Match start alerts, prize notifications</p></div>
+                <label class="gp-toggle"><input type="checkbox" id="pm_whatsapp_notify" checked><span class="gp-toggle-slider"></span></label>
+              </div>
+            </div>
+            <p class="visit-status" id="profileSaveStatus"></p>
+            <button type="submit" class="gm-buy-btn" id="profileSaveBtn"><ion-icon name="save-outline"></ion-icon> Save Changes</button>
+          </form>
+          <div class="gp-section gp-danger-zone">
+            <h3 class="gp-section-title gp-danger-title"><ion-icon name="warning-outline"></ion-icon> Account</h3>
+            <a href="./admin.html" class="gp-admin-console-btn" id="gpAdminConsoleLink" style="display:none;" target="_blank">
+              <ion-icon name="shield-outline"></ion-icon> Admin Console
+            </a>
+            <button class="gp-signout-btn" id="gpSignOutBtn"><ion-icon name="log-out-outline"></ion-icon> Sign Out</button>
+            <button class="gp-signout-btn" style="background:hsl(260 25% 18%);border-color:hsl(260 25% 30%);color:hsl(260 60% 65%);" onclick="closeProfileModal();setTimeout(()=>startWalkthrough(true),300);" title="Replay the site tour">
+              <ion-icon name="help-circle-outline"></ion-icon> Take the Tour Again
+            </button>
+          </div>
+        </div>
+
+        <!-- ── REFERRALS / INVITE TAB ─────────────────────────────────────── -->
+        <div class="gp-panel" id="gptab-referrals" style="display:none;">
+
+          <!-- Earnings summary banner -->
+          <div class="invite-banner">
+            <ion-icon name="gift-outline" class="invite-banner-icon"></ion-icon>
+            <div>
+              <p class="invite-banner-title">Invite Friends, Earn Points</p>
+              <p class="invite-banner-sub">You get <strong>50 pts</strong> every time someone signs up with your code. They get <strong>20 pts</strong> as a welcome bonus.</p>
+            </div>
+          </div>
+
+          <!-- Your code display -->
+          <div class="gp-section">
+            <h3 class="gp-section-title"><ion-icon name="barcode-outline"></ion-icon> Your Invite Code</h3>
+            <div class="invite-code-display-box">
+              <span class="invite-code-mono" id="gpInviteCode">Loading...</span>
+            </div>
+          </div>
+
+          <!-- Two big action buttons -->
+          <div class="invite-action-grid">
+            <!-- Copy code only -->
+            <button class="invite-action-btn invite-action-code" id="gpCopyCodeBtn">
+              <span class="invite-action-icon-wrap">
+                <ion-icon name="copy-outline"></ion-icon>
+              </span>
+              <span class="invite-action-text">
+                <strong>Copy Code</strong>
+                <small>Share the short code alone — e.g. paste it in a group chat</small>
+              </span>
+              <span class="invite-action-tag">Code only</span>
+            </button>
+
+            <!-- Copy full invite link -->
+            <button class="invite-action-btn invite-action-link" id="gpCopyLinkBtn">
+              <span class="invite-action-icon-wrap">
+                <ion-icon name="link-outline"></ion-icon>
+              </span>
+              <span class="invite-action-text">
+                <strong>Copy Invite Link</strong>
+                <small>Full link that auto-fills the code when clicked — best for WhatsApp / Instagram</small>
+              </span>
+              <span class="invite-action-tag invite-action-tag--link">Recommended</span>
+            </button>
+
+            <!-- Share via device share sheet -->
+            <button class="invite-action-btn invite-action-share" id="gpShareCodeBtn">
+              <span class="invite-action-icon-wrap">
+                <ion-icon name="share-social-outline"></ion-icon>
+              </span>
+              <span class="invite-action-text">
+                <strong>Share via App</strong>
+                <small>Opens WhatsApp, SMS, Twitter etc. with a ready-to-send message</small>
+              </span>
+              <span class="invite-action-tag invite-action-tag--share">Quick share</span>
+            </button>
+          </div>
+
+          <!-- Copied feedback strip (hidden by default) -->
+          <div class="invite-copied-strip" id="inviteCopiedStrip" style="display:none;">
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+            <span id="inviteCopiedMsg">Copied!</span>
+          </div>
+
+          <!-- Points balance -->
+          <div class="gp-section" style="margin-block-start:24px;">
+            <h3 class="gp-section-title"><ion-icon name="star-outline"></ion-icon> Your Points Balance</h3>
+            <div class="invite-points-row">
+              <div class="invite-points-big" id="gpPointsBalance">0</div>
+              <span class="invite-points-label">PhinTech Points</span>
+            </div>
+            <p class="invite-code-hint">Points unlock tournament entry discounts. More redemptions coming soon.</p>
+          </div>
+
+          <!-- Referral stats -->
+          <div class="gp-section">
+            <h3 class="gp-section-title"><ion-icon name="people-outline"></ion-icon> People You've Invited</h3>
+            <div id="gpReferralsList" class="gp-tourns-list">
+              <p class="gp-empty">Loading...</p>
+            </div>
+          </div>
+
+          <!-- Points history -->
+          <div class="gp-section">
+            <h3 class="gp-section-title"><ion-icon name="receipt-outline"></ion-icon> Points History</h3>
+            <div id="gpPointsLedger" class="gp-tourns-list">
+              <p class="gp-empty">Loading...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── WALLET TAB ────────────────────────────────────────────────── -->
+        <div class="gp-panel" id="gptab-wallet" style="display:none;">
+          <div class="gp-section">
+            <h3 class="gp-section-title"><ion-icon name="wallet-outline"></ion-icon> KES Balance</h3>
+            <div class="wallet-balance-card">
+              <div class="wallet-balance-amount">KES <span id="walletBalance">0</span></div>
+              <p class="wallet-balance-sub">Available for withdrawals or entry fee payments</p>
+            </div>
+            <div class="wallet-action-row">
+              <button class="wallet-btn wallet-btn--deposit" id="walletDepositBtn">
+                <ion-icon name="add-circle-outline"></ion-icon> Add Money
+              </button>
+              <button class="wallet-btn wallet-btn--withdraw" id="walletWithdrawBtn">
+                <ion-icon name="cash-outline"></ion-icon> Withdraw
+              </button>
+            </div>
+          </div>
+          <div class="gp-section" id="walletDepositForm" style="display:none;">
+            <h3 class="gp-section-title"><ion-icon name="phone-portrait-outline"></ion-icon> Deposit via M-Pesa</h3>
+
+            <!-- Payment method tabs -->
+            <div class="deposit-method-tabs">
+              <button class="deposit-method-tab active" id="depositTabStk" onclick="switchDepositTab('stk')">
+                <ion-icon name="flash-outline"></ion-icon> STK Push
+              </button>
+              <button class="deposit-method-tab" id="depositTabTill" onclick="switchDepositTab('till')">
+                <ion-icon name="storefront-outline"></ion-icon> Pay to Till
+              </button>
+            </div>
+
+            <!-- STK Push panel -->
+            <div id="depositPanelStk">
+              <div class="visit-field">
+                <label for="depositAmount"><ion-icon name="cash-outline"></ion-icon> Amount (KES, min 10)</label>
+                <input type="number" id="depositAmount" class="visit-input" placeholder="e.g. 500" min="10">
+              </div>
+              <div class="visit-field">
+                <label for="depositPhone"><ion-icon name="phone-portrait-outline"></ion-icon> M-Pesa Number</label>
+                <input type="tel" id="depositPhone" class="visit-input" placeholder="+254 7XX XXX XXX">
+              </div>
+              <button class="gm-buy-btn" id="depositSubmitBtn" style="width:100%;margin-block-start:12px;">
+                <ion-icon name="phone-portrait-outline"></ion-icon> Send STK Push
+              </button>
+              <p class="visit-status" id="depositStatus"></p>
+            </div>
+
+            <!-- Direct Till payment panel -->
+            <div id="depositPanelTill" style="display:none;">
+              <div class="till-payment-card">
+                <div class="till-logo">
+                  <ion-icon name="phone-portrait-outline"></ion-icon>
+                </div>
+                <div class="till-steps">
+                  <p class="till-steps-title">Pay directly via M-Pesa</p>
+                  <ol class="till-steps-list">
+                    <li>Open <strong>M-Pesa</strong> on your phone</li>
+                    <li>Select <strong>Lipa na M-Pesa</strong></li>
+                    <li>Select <strong>Buy Goods &amp; Services</strong></li>
+                    <li>Enter Till Number: <span class="till-number">5535650</span></li>
+                    <li>Enter your amount</li>
+                    <li>Enter your M-Pesa PIN &amp; confirm</li>
+                  </ol>
+                  <div class="till-info-row">
+                    <div class="till-info-item">
+                      <span class="till-info-label">Till Number</span>
+                      <span class="till-info-value" id="tillNumberDisplay">5535650</span>
+                      <button class="till-copy-btn" onclick="copyTillNumber()" title="Copy till number" aria-label="Copy till number">
+                        <ion-icon name="copy-outline"></ion-icon>
+                      </button>
+                    </div>
+                    <div class="till-info-item">
+                      <span class="till-info-label">Business Name</span>
+                      <span class="till-info-value">PHINTECH SOLUTIONS</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="visit-field" style="margin-block-start:14px;">
+                <label for="tillConfirmRef"><ion-icon name="receipt-outline"></ion-icon> M-Pesa Confirmation Code</label>
+                <input type="text" id="tillConfirmRef" class="visit-input" placeholder="e.g. QHX1234ABC" maxlength="20"
+                  style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
+              </div>
+              <div class="visit-field">
+                <label for="tillConfirmAmount"><ion-icon name="cash-outline"></ion-icon> Amount Paid (KES)</label>
+                <input type="number" id="tillConfirmAmount" class="visit-input" placeholder="e.g. 500" min="10">
+              </div>
+              <button class="gm-buy-btn" id="tillConfirmBtn" onclick="submitTillPayment()" style="width:100%;margin-block-start:12px;">
+                <ion-icon name="checkmark-circle-outline"></ion-icon> Confirm Payment
+              </button>
+              <p class="visit-status" id="tillConfirmStatus"></p>
+              <p class="till-note">
+                <ion-icon name="information-circle-outline"></ion-icon>
+                Your wallet will be credited within a few minutes after admin verification.
+              </p>
+            </div>
+          </div>
+          <div class="gp-section" id="walletWithdrawForm" style="display:none;">
+            <h3 class="gp-section-title"><ion-icon name="arrow-up-outline"></ion-icon> Withdraw to M-Pesa</h3>
+            <div class="visit-field">
+              <label for="withdrawAmount"><ion-icon name="cash-outline"></ion-icon> Amount (KES, min 50)</label>
+              <input type="number" id="withdrawAmount" class="visit-input" placeholder="e.g. 500" min="50">
+            </div>
+            <button class="gm-buy-btn" id="withdrawSubmitBtn" style="width:100%;margin-block-start:12px;">
+              <ion-icon name="cash-outline"></ion-icon> Withdraw to My M-Pesa
+            </button>
+            <p class="visit-status" id="withdrawStatus"></p>
+          </div>
+          <div class="gp-section">
+            <h3 class="gp-section-title"><ion-icon name="receipt-outline"></ion-icon> Transaction History</h3>
+            <div id="walletTransactions" class="gp-tourns-list"><p class="gp-empty">Loading...</p></div>
+          </div>
+        </div>
+
+        <!-- ── ADMIN TAB ──────────────────────────────────────────────────── -->
+        <div class="gp-panel" id="gptab-admin" style="display:none;">
+          <div class="admin-stats-row">
+            <div class="admin-stat-card"><ion-icon name="people-outline"></ion-icon><span id="adminStatUsers">—</span><small>Users</small></div>
+            <div class="admin-stat-card"><ion-icon name="trophy-outline"></ion-icon><span id="adminStatTourns">—</span><small>Tournaments</small></div>
+            <div class="admin-stat-card admin-stat-card--warn"><ion-icon name="time-outline"></ion-icon><span id="adminStatPending">—</span><small>Pending</small></div>
+            <div class="admin-stat-card admin-stat-card--danger"><ion-icon name="warning-outline"></ion-icon><span id="adminStatDisputes">—</span><small>Disputes</small></div>
+            <div class="admin-stat-card admin-stat-card--money"><ion-icon name="cash-outline"></ion-icon><span id="adminStatRevenue">—</span><small>Revenue</small></div>
+            <div class="admin-stat-card admin-stat-card--warn"><ion-icon name="send-outline"></ion-icon><span id="adminStatPayouts">—</span><small>Payouts</small></div>
+          </div>
+          <div class="admin-tabs">
+            <button class="admin-tab active" data-admintab="pending-tourns" onclick="switchAdminTab('pending-tourns')">⏳ Pending</button>
+            <button class="admin-tab" data-admintab="disputes"      onclick="switchAdminTab('disputes')">⚠️ Disputes</button>
+            <button class="admin-tab" data-admintab="payouts-admin" onclick="switchAdminTab('payouts-admin')">💸 Payouts</button>
+          </div>
+          <div class="admin-panel" id="adminpanel-pending-tourns">
+            <div id="adminPendingList" class="gp-tourns-list"><p class="gp-empty">Loading...</p></div>
+          </div>
+          <div class="admin-panel" id="adminpanel-disputes" style="display:none;">
+            <div id="adminDisputesList" class="gp-tourns-list"><p class="gp-empty">Loading...</p></div>
+          </div>
+          <div class="admin-panel" id="adminpanel-payouts-admin" style="display:none;">
+            <button class="gm-buy-btn" id="adminRunPayoutsBtn" style="margin-block-end:12px;width:100%;">
+              <ion-icon name="send-outline"></ion-icon> Process All Pending Payouts Now
+            </button>
+            <div id="adminPayoutsList" class="gp-tourns-list"><p class="gp-empty">Loading...</p></div>
+          </div>
+        </div>
+
+      </div>
+      <p class="modal-powered" style="padding:12px 24px;border-top:1px solid #2d2541;"><a href="https://phintechsolutions.com" target="_blank" rel="noopener">Powered by PhinTech Solutions &mdash; Built in Kenya</a></p>
+    </div>
+  </div>
+
+
+  <!--
+    - #REALTIME MATCH ROOM MODAL
+  -->
+
+  <div class="modal-overlay" id="matchRoomModal" role="dialog" aria-modal="true" aria-label="Live Match Room">
+    <div class="match-room-box">
+
+      <!-- Header -->
+      <div class="mr-header">
+        <div class="mr-header-left">
+          <div class="mr-live-dot"></div>
+          <h2 class="mr-title" id="mrMatchTitle">Match Room</h2>
+          <span class="rt-connection-status disconnected" id="rtConnectionStatus">🔴 Connecting...</span>
+        </div>
+        <div class="mr-header-right">
+          <span id="rtViewerCount" class="mr-viewer-count">0 online</span>
+          <button class="gm-close-btn" onclick="leaveAndCloseMatchRoom()" aria-label="Leave match room">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live scoreboard -->
+      <div class="mr-scoreboard">
+        <div class="mr-player mr-player-left">
+          <div class="mr-player-avatar" id="mrP1Avatar">
+            <img src="" alt="" id="mrP1AvatarImg">
+            <span id="mrP1AvatarFallback">P1</span>
+          </div>
+          <p class="mr-player-tag" id="mrP1Tag">Player 1</p>
+          <p class="mr-player-elo" id="mrP1Elo">ELO —</p>
+          <div class="mr-role-badge p1">Player 1</div>
+        </div>
+
+        <div class="mr-center">
+          <div class="mr-score-display">
+            <span class="mr-score" id="rtScoreP1">0</span>
+            <span class="mr-score-sep">:</span>
+            <span class="mr-score" id="rtScoreP2">0</span>
+          </div>
+          <p class="mr-game-name" id="mrGameName">FIFA / EA FC</p>
+          <p class="mr-round-name" id="mrRoundName">Semifinal</p>
+
+          <!-- Controls for players -->
+          <div class="mr-controls" id="mrControls" style="display:none;">
+            <div class="mr-score-controls">
+              <div class="mr-score-ctrl">
+                <p class="mr-score-ctrl-label">My Score</p>
+                <div class="mr-score-ctrl-row">
+                  <button class="mr-score-btn minus" onclick="changeMyScore(-1)">−</button>
+                  <span class="mr-score-val" id="mrMyScore">0</span>
+                  <button class="mr-score-btn plus" onclick="changeMyScore(1)">+</button>
+                </div>
+              </div>
+            </div>
+            <div class="mr-event-btns">
+              <button class="mr-event-btn start" onclick="broadcastMatchEvent('start')">
+                <ion-icon name="play-circle-outline"></ion-icon> Start
+              </button>
+              <button class="mr-event-btn pause" onclick="broadcastMatchEvent('pause')">
+                <ion-icon name="pause-circle-outline"></ion-icon> Pause
+              </button>
+              <button class="mr-event-btn end" onclick="confirmEndMatch()">
+                <ion-icon name="flag-outline"></ion-icon> End Match
+              </button>
+              <button class="mr-event-btn dispute" onclick="broadcastMatchEvent('dispute')">
+                <ion-icon name="warning-outline"></ion-icon> Dispute
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mr-player mr-player-right">
+          <div class="mr-player-avatar" id="mrP2Avatar">
+            <img src="" alt="" id="mrP2AvatarImg">
+            <span id="mrP2AvatarFallback">P2</span>
+          </div>
+          <p class="mr-player-tag" id="mrP2Tag">Player 2</p>
+          <p class="mr-player-elo" id="mrP2Elo">ELO —</p>
+          <div class="mr-role-badge p2">Player 2</div>
+        </div>
+      </div>
+
+      <!-- Bottom: presence + chat -->
+      <div class="mr-bottom">
+
+        <!-- Who's watching -->
+        <div class="mr-presence-bar">
+          <ion-icon name="eye-outline"></ion-icon>
+          <div class="rt-presence-list" id="rtPresenceList"></div>
+        </div>
+
+        <!-- Match room chat -->
+        <div class="mr-chat" id="rtPanel" style="display:none;">
+          <div class="mr-chat-messages" id="rtChatMessages"></div>
+          <form class="mr-chat-form" id="rtChatForm">
+            <input type="text" id="rtChatInput" class="mr-chat-input"
+              placeholder="Say something..." maxlength="200" autocomplete="off">
+            <button type="submit" class="mr-chat-send">
+              <ion-icon name="send-outline"></ion-icon>
+            </button>
+          </form>
+        </div>
+
+        <p class="modal-powered" style="padding:10px 0 0;text-align:center;">
+          <a href="https://phintechsolutions.com" target="_blank" rel="noopener">
+            Powered by PhinTech Solutions — Built in Kenya
+          </a>
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!--
+    - #REALTIME MATCH ROOM MODAL
+  -->
+
+  <div class="modal-overlay" id="hostModal" role="dialog" aria-modal="true" aria-label="Host tournament">
+    <div class="install-modal-box">
+      <button class="gm-close-btn" id="hostModalClose" aria-label="Close">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+      <div class="install-modal-header">
+        <ion-icon name="trophy-outline" class="install-icon"></ion-icon>
+        <h2 class="install-title">Host a <span>Tournament</span></h2>
+        <p style="color:var(--roman-silver);font-size:1.3rem;">Fill in the details below. Tournament goes live after admin approval.</p>
+      </div>
+      <form class="result-form" id="hostForm" novalidate>
+        <div class="result-form-grid">
+          <div class="visit-field">
+            <label for="hostName"><ion-icon name="trophy-outline"></ion-icon> Tournament Name</label>
+            <input type="text" id="hostName" class="visit-input" placeholder="e.g. PhinTech PES Cup #1" required>
+          </div>
+          <div class="visit-field">
+            <label for="hostGame"><ion-icon name="game-controller-outline"></ion-icon> Game</label>
+            <select id="hostGame" class="visit-input" required>
+              <option value="">Select game...</option>
+              <optgroup label="⚽ Football / Soccer">
+                <option>PES / eFootball</option>
+                <option>FIFA / EA FC</option>
+                <option>Dream League Soccer</option>
+                <option>Football Manager</option>
+              </optgroup>
+              <optgroup label="🥊 Fighting">
+                <option>Tekken 8</option>
+                <option>Mortal Kombat 1</option>
+                <option>Street Fighter 6</option>
+                <option>Dragon Ball FighterZ</option>
+                <option>UFC 5</option>
+              </optgroup>
+              <optgroup label="🏀 Sports">
+                <option>NBA 2K</option>
+                <option>WWE 2K</option>
+                <option>Rocket League</option>
+                <option>Tennis World Tour</option>
+              </optgroup>
+              <optgroup label="🎯 Shooters">
+                <option>Call of Duty</option>
+                <option>Fortnite</option>
+                <option>PUBG Mobile</option>
+                <option>Valorant</option>
+                <option>CS2</option>
+                <option>Free Fire</option>
+              </optgroup>
+              <optgroup label="🧩 Strategy / Board">
+                <option>Chess</option>
+                <option>Ludo</option>
+                <option>Checkers / Draughts</option>
+                <option>Clash Royale</option>
+                <option>Clash of Clans</option>
+              </optgroup>
+              <optgroup label="🃏 Card / Casual">
+                <option>UNO</option>
+                <option>Hearthstone</option>
+                <option>Brawl Stars</option>
+                <option>Candy Crush</option>
+              </optgroup>
+              <optgroup label="🎮 Other">
+                <option>GTA Online</option>
+                <option>Minecraft</option>
+                <option>Among Us</option>
+                <option value="Other">Other (specify below)</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="visit-field" id="hostGameOtherWrap" style="display:none;">
+            <label for="hostGameOther"><ion-icon name="create-outline"></ion-icon> Specify Game</label>
+            <input type="text" id="hostGameOther" class="visit-input" placeholder="Enter game name...">
+          </div>
+          <div class="visit-field">
+            <label for="hostFormat"><ion-icon name="git-branch-outline"></ion-icon> Format</label>
+            <select id="hostFormat" class="visit-input">
+              <option value="single">Single Elimination</option>
+              <option value="double">Double Elimination</option>
+              <option value="roundrobin">Round Robin</option>
+              <option value="swiss">Swiss</option>
+            </select>
+          </div>
+          <div class="visit-field">
+            <label for="hostMaxPlayers"><ion-icon name="people-outline"></ion-icon> Max Players</label>
+            <select id="hostMaxPlayers" class="visit-input">
+              <option value="8">8</option>
+              <option value="16" selected>16</option>
+              <option value="32">32</option>
+              <option value="64">64</option>
+            </select>
+          </div>
+          <div class="visit-field">
+            <label for="hostFee"><ion-icon name="cash-outline"></ion-icon> Entry Fee (KES)</label>
+            <select id="hostFee" class="visit-input">
+              <option value="50">KES 50</option>
+              <option value="100" selected>KES 100</option>
+              <option value="200">KES 200</option>
+              <option value="500">KES 500</option>
+              <option value="1000">KES 1,000</option>
+            </select>
+          </div>
+          <div class="visit-field">
+            <label for="hostPrize"><ion-icon name="gift-outline"></ion-icon> Prize Pool (KES)</label>
+            <input type="number" id="hostPrize" class="visit-input" placeholder="e.g. 7000" min="0">
+          </div>
+          <div class="visit-field">
+            <label for="hostDate"><ion-icon name="calendar-outline"></ion-icon> Start Date</label>
+            <input type="date" id="hostDate" class="visit-input" required>
+          </div>
+          <div class="visit-field">
+            <label for="hostPlatform"><ion-icon name="desktop-outline"></ion-icon> Platform</label>
+            <select id="hostPlatform" class="visit-input">
+              <option>PS5</option>
+              <option>PS4</option>
+              <option>Xbox Series X</option>
+              <option>PC</option>
+              <option>Mobile</option>
+              <option>Cross-Platform</option>
+            </select>
+          </div>
+        </div>
+        <div class="visit-field">
+          <label for="hostRules"><ion-icon name="document-text-outline"></ion-icon> Rules / Notes</label>
+          <textarea id="hostRules" class="visit-input" rows="3" placeholder="e.g. 2x5min halves, no custom tactics..."></textarea>
+        </div>
+        <div class="visit-field">
+          <label for="hostContact"><ion-icon name="phone-portrait-outline"></ion-icon> Host Phone (M-Pesa)</label>
+          <input type="tel" id="hostContact" class="visit-input" placeholder="+254 7XX XXX XXX" required>
+        </div>
+        <p class="visit-status" id="hostStatus"></p>
+        <button type="submit" class="gm-buy-btn">
+          <ion-icon name="rocket-outline"></ion-icon> Submit for Approval
+        </button>
+      </form>
+      <p class="modal-powered">
+        <a href="https://phintechsolutions.com" target="_blank" rel="noopener">Powered by PhinTech Solutions — Kenya</a>
+      </p>
+    </div>
+  </div>
+
+
+  <!--
+    - #TOURNAMENT REGISTER MODAL
+  -->
+
+  <div class="modal-overlay" id="registerModal" role="dialog" aria-modal="true" aria-label="Register for tournament">
+    <div class="install-modal-box">
+      <button class="gm-close-btn" id="registerModalClose" aria-label="Close">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+      <div class="install-modal-header">
+        <ion-icon name="person-add-outline" class="install-icon"></ion-icon>
+        <h2 class="install-title">Join <span id="regTournamentName">Tournament</span></h2>
+        <p class="install-price" id="regEntryFee"></p>
+      </div>
+      <form class="result-form" id="registerForm" novalidate>
+        <div class="result-form-grid">
+          <div class="visit-field">
+            <label for="regGamerTag"><ion-icon name="game-controller-outline"></ion-icon> Gamer Tag</label>
+            <input type="text" id="regGamerTag" class="visit-input" placeholder="e.g. Phin_KE" required>
+          </div>
+          <div class="visit-field">
+            <label for="regPhone"><ion-icon name="phone-portrait-outline"></ion-icon> M-Pesa Number</label>
+            <input type="tel" id="regPhone" class="visit-input" placeholder="+254 7XX XXX XXX" required>
+          </div>
+          <div class="visit-field">
+            <label for="regPlatformId"><ion-icon name="desktop-outline"></ion-icon> Platform ID / PSN / GT</label>
+            <input type="text" id="regPlatformId" class="visit-input" placeholder="e.g. Phin_KE on PSN">
+          </div>
+          <div class="visit-field">
+            <label for="regCounty"><ion-icon name="location-outline"></ion-icon> County</label>
+            <input type="text" id="regCounty" class="visit-input" placeholder="e.g. Nairobi">
+          </div>
+        </div>
+        <div class="visit-info-banner" style="margin-block:16px 0">
+          <ion-icon name="phone-portrait-outline"></ion-icon>
+          <div>
+            <strong>Pay Entry Fee via M-Pesa</strong>
+            <p>After submitting, an STK Push will be sent to your phone. Enter your M-Pesa PIN to confirm registration.</p>
+          </div>
+        </div>
+        <p class="visit-status" id="registerStatus"></p>
+
+        <!-- Wallet payment option (shown when user has sufficient balance) -->
+        <div class="reg-wallet-row" id="regWalletRow" style="display:none;">
+          <div class="reg-wallet-info">
+            <ion-icon name="wallet-outline"></ion-icon>
+            <span>Wallet balance: <strong id="regWalletBalance">KES 0</strong></span>
+          </div>
+          <button type="button" class="wallet-btn wallet-btn--deposit" id="regPayWalletBtn"
+            style="flex:0;padding:10px 18px;font-size:1.25rem;"
+            onclick="payEntryFeeFromWallet(document.getElementById('registerModal').dataset.tid)">
+            <ion-icon name="wallet-outline"></ion-icon> Pay from Wallet
+          </button>
+        </div>
+
+        <button type="submit" class="gm-buy-btn" style="margin-block-start:16px;">
+          <ion-icon name="phone-portrait-outline"></ion-icon> Register &amp; Pay via M-Pesa
+        </button>
+      </form>
+      <p class="modal-powered">
+        <a href="https://phintechsolutions.com" target="_blank" rel="noopener">Powered by PhinTech Solutions — Kenya</a>
+      </p>
+    </div>
+  </div>
+
+
+  <!--
+    - #GAME DETAIL MODAL
+  -->
+
+  <div class="gm-overlay modal-overlay" id="gameModal" role="dialog" aria-modal="true" aria-label="Game details">
+    <div class="gm-modal-box">
+      <button class="gm-close-btn" id="gameModalClose" aria-label="Close">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+      <div id="gameModalBody">
+        <div class="gm-loader">
+          <div class="igdb-spinner"></div>
+          <p>Loading game details...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--
+    - #INSTALL / HOME VISIT MODAL
+  -->
+
+  <div class="modal-overlay" id="installModal" role="dialog" aria-modal="true" aria-label="Install game">
+    <div class="install-modal-box">
+
+      <button class="gm-close-btn" id="installModalClose" aria-label="Close">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+
+      <div class="install-modal-header">
+        <ion-icon name="game-controller-outline" class="install-icon"></ion-icon>
+        <h2 class="install-title">Get <span id="installGameTitle">this game</span></h2>
+        <p class="install-price" id="installGamePrice"></p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="install-tabs">
+        <button class="install-tab-btn active" data-tab="self">
+          <ion-icon name="laptop-outline"></ion-icon> Self Install
+        </button>
+        <button class="install-tab-btn" data-tab="visit">
+          <ion-icon name="car-outline"></ion-icon> Home Visit
+        </button>
+      </div>
+
+      <!-- Self Install panel -->
+      <div class="install-tab-panel" data-panel="self">
+        <p class="install-intro">
+          After payment you will receive your game license key and download link via SMS and email.
+          Follow these steps to install:
+        </p>
+        <ol class="install-steps">
+          <li>
+            <span class="step-num">1</span>
+            <div class="step-content">
+              <strong>Complete M-Pesa Payment</strong>
+              <p>Pay <strong id="selfInstallPrice"></strong> via M-Pesa STK Push. You will receive an SMS confirmation within 2 minutes.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <div class="step-content">
+              <strong>Receive Your Download Link</strong>
+              <p>A secure download link and activation key will be sent to your M-Pesa registered number and email.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <div class="step-content">
+              <strong>Download the Installer</strong>
+              <p>Click the link, download the installer file (.exe / .dmg / .apk depending on your platform).</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">4</span>
+            <div class="step-content">
+              <strong>Run the Installer</strong>
+              <p>Open the downloaded file. Follow the on-screen setup wizard. Takes 5–15 minutes depending on your internet speed.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">5</span>
+            <div class="step-content">
+              <strong>Activate with Your Key</strong>
+              <p>When prompted, enter the activation key from your SMS. Your game is now fully unlocked.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">6</span>
+            <div class="step-content">
+              <strong>Need Help?</strong>
+              <p>Call or WhatsApp our Nairobi support team: <a href="tel:+254700000000" class="install-link">+254 700 000 000</a> — available 8am–10pm EAT.</p>
+            </div>
+          </li>
+        </ol>
+        <button class="gm-buy-btn install-pay-btn" onclick="document.getElementById('installModal').classList.remove('active'); showPaymentModal();">
+          <ion-icon name="phone-portrait-outline"></ion-icon> Pay Now via M-Pesa
+        </button>
+      </div>
+
+      <!-- Home Visit panel -->
+      <div class="install-tab-panel" data-panel="visit" style="display:none;">
+        <div class="visit-info-banner">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+          <div>
+            <strong>Professional Home Installation — Nairobi & Environs</strong>
+            <p>One of our certified PhinTech Solutions technicians will visit your location and do a full game installation on your machine. Included in the game price — no extra charge within Nairobi.</p>
+          </div>
+        </div>
+
+        <ul class="visit-includes">
+          <li><ion-icon name="checkmark-circle"></ion-icon> Full game installation on your PC, console, or phone</li>
+          <li><ion-icon name="checkmark-circle"></ion-icon> Driver and dependency setup if needed</li>
+          <li><ion-icon name="checkmark-circle"></ion-icon> Game settings optimisation for your hardware</li>
+          <li><ion-icon name="checkmark-circle"></ion-icon> 30-minute play test to confirm everything works</li>
+          <li><ion-icon name="checkmark-circle"></ion-icon> Free follow-up support call within 7 days</li>
+        </ul>
+
+        <form class="visit-form" id="visitForm" novalidate>
+          <p class="visit-form-title">Book Your Visit</p>
+
+          <div class="visit-field">
+            <label for="visitPhone">
+              <ion-icon name="phone-portrait-outline"></ion-icon> M-Pesa / WhatsApp Number
+            </label>
+            <input type="tel" id="visitPhone" placeholder="+254 7XX XXX XXX"
+                   maxlength="13" required class="visit-input">
+          </div>
+
+          <div class="visit-field">
+            <label for="visitLocation">
+              <ion-icon name="location-outline"></ion-icon> Your Location (Estate, Town, County)
+            </label>
+            <input type="text" id="visitLocation" placeholder="e.g. Westlands, Nairobi"
+                   required class="visit-input">
+          </div>
+
+          <div class="visit-field">
+            <label for="visitDate">
+              <ion-icon name="calendar-outline"></ion-icon> Preferred Visit Date
+            </label>
+            <input type="date" id="visitDate" required class="visit-input">
+          </div>
+
+          <p class="visit-status" id="visitStatus"></p>
+
+          <button type="submit" class="gm-buy-btn install-pay-btn">
+            <ion-icon name="car-outline"></ion-icon> Confirm Booking &amp; Pay
+          </button>
+        </form>
+
+        <p class="visit-note">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          Outside Nairobi? Call <a href="tel:+254700000000" class="install-link">+254 700 000 000</a> — we cover most major towns in Kenya.
+        </p>
+      </div>
+
+      <p class="modal-powered">
+        <a href="https://phintechsolutions.com" target="_blank" rel="noopener">
+          Powered by PhinTech Solutions — Built in Kenya
+        </a>
+      </p>
+
+    </div>
+  </div>
+
+
+  <!-- 
+    - #MPESA PAYMENT MODAL
+  -->
+
+  <div class="modal-overlay" id="paymentModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box">
+
+      <div class="modal-header">
+        <ion-icon name="flash" class="modal-icon"></ion-icon>
+        <h2 class="modal-title" id="modalTitle">Unlock <span>PHINTECH ARENA</span></h2>
+        <p class="modal-subtitle">Your 14-day free trial has ended. Choose a plan to continue.</p>
+      </div>
+
+      <div class="pricing-grid">
+
+        <div class="pricing-card" data-plan="monthly" data-amount="2000">
+          <p class="plan-label">Monthly</p>
+          <p class="plan-price">KES 2,000<span>/mo</span></p>
+          <p class="plan-desc">Billed monthly. Cancel anytime.</p>
+        </div>
+
+        <div class="pricing-card featured-plan" data-plan="annual" data-amount="23000">
+          <p class="plan-badge">Best Value</p>
+          <p class="plan-label">Annual</p>
+          <p class="plan-price">KES 23,000<span>/yr</span></p>
+          <p class="plan-desc">Save KES 1,000 vs monthly.</p>
+        </div>
+
+        <div class="pricing-card" data-plan="lifetime" data-amount="25000">
+          <p class="plan-label">One-Time</p>
+          <p class="plan-price">KES 25,000</p>
+          <p class="plan-desc">Pay once. Own forever.</p>
+        </div>
+
+      </div>
+
+      <div class="mpesa-form" id="mpesaForm">
+
+        <!-- ── OPTION 1: Pay directly to till (shown first) ── -->
+        <div class="pay-option-card pay-option-card--primary" id="payOptionTill">
+          <div class="pay-option-header">
+            <span class="pay-option-badge">Recommended</span>
+            <p class="pay-option-title"><ion-icon name="storefront-outline"></ion-icon> Pay to Till — PHINTECH SOLUTIONS</p>
+          </div>
+          <div class="till-info-row">
+            <div class="till-info-item">
+              <span class="till-info-label">Till Number</span>
+              <span class="till-info-value" id="tillNumberDisplay">5535650</span>
+              <button class="till-copy-btn" onclick="copyTillNumber()" title="Copy till number" aria-label="Copy till number">
+                <ion-icon name="copy-outline"></ion-icon>
+              </button>
+            </div>
+            <div class="till-info-item">
+              <span class="till-info-label">Business</span>
+              <span class="till-info-value" style="font-size:1.2rem;">PHINTECH SOLUTIONS</span>
+            </div>
+          </div>
+          <ol class="till-steps-list" style="margin-block:12px 0;">
+            <li>Open <strong>M-Pesa</strong> → <strong>Lipa na M-Pesa</strong> → <strong>Buy Goods &amp; Services</strong></li>
+            <li>Enter till: <strong>5535650</strong></li>
+            <li>Enter the plan amount shown above &amp; confirm</li>
+            <li>Enter your M-Pesa code below</li>
+          </ol>
+          <!-- Confirmation fields (visible by default) -->
+          <div class="till-confirm-fields" id="tillConfirmFieldsModal" style="margin-block-start:14px;">
+            <div class="visit-field">
+              <label for="tillConfirmRefModal"><ion-icon name="receipt-outline"></ion-icon> M-Pesa Confirmation Code</label>
+              <input type="text" id="tillConfirmRefModal" class="phone-field" placeholder="e.g. QHX1234ABC"
+                maxlength="20" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
+            </div>
+            <button class="pay-btn skewBg" id="tillConfirmModalBtn" onclick="submitTillPaymentModal()" style="background:linear-gradient(135deg,hsl(140 60% 30%),hsl(160 50% 20%));box-shadow:0 4px 18px hsl(140 50% 10%/.5);">
+              <ion-icon name="checkmark-circle-outline"></ion-icon> Confirm Payment
+            </button>
+            <p class="pay-status" id="tillModalStatus"></p>
+            <p class="till-note" style="margin-block-start:10px;">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              Your license will be activated within minutes after admin verification.
+            </p>
+          </div>
+        </div>
+
+        <!-- ── OPTION 2: Automatic STK Push ── -->
+        <div class="pay-divider"><span>or get an automatic prompt</span></div>
+        <div class="pay-option-card" id="payOptionStk">
+          <p class="pay-option-title"><ion-icon name="phone-portrait-outline"></ion-icon> M-Pesa STK Push (Auto)</p>
+          <p style="font-size:1.2rem;color:var(--roman-silver);margin-block-end:12px;">Enter your number and we'll send a payment prompt directly to your phone.</p>
+          <input type="tel" id="phoneInput" placeholder="+254 7XX XXX XXX" maxlength="13" class="phone-field"
+            aria-label="M-Pesa phone number">
+          <button class="pay-btn skewBg" id="payBtn" onclick="initiateMpesaPayment()">
+            <ion-icon name="flash-outline"></ion-icon>
+            Send Payment Prompt
+          </button>
+          <p class="pay-status" id="payStatus"></p>
+        </div>
+
+      </div>
+
+      <p class="modal-powered">
+        <a href="https://phintechsolutions.com" target="_blank" rel="noopener">Powered by PhinTech Solutions &mdash; Kenya</a>
+      </p>
+
+    </div>
+  </div>
+
+
+
+
+
+  <!-- Supabase JS client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <!-- Init Supabase client from external file (no inline scripts = no CSP violations) -->
+  <script src="./assets/js/supabase-init.js"></script>
+
   <!-- 
     - custom js link
   -->
   <script src="./assets/js/script.js" defer></script>
+  <script src="./assets/js/auth.js" defer></script>
+  <script src="./assets/js/hud.js" defer></script>
+  <script src="./assets/js/live.js" defer></script>
+  <script src="./assets/js/realtime.js" defer></script>
+  <script src="./assets/js/license.js" defer></script>
+  <script src="./assets/js/games.js" defer></script>
+  <script src="./assets/js/arena.js" defer></script>
+  <script src="./assets/js/site.js" defer></script>
+  <script src="./assets/js/admin.js" defer></script>
+  <script src="./assets/js/chat.js" defer></script>
+  <script src="./assets/js/engage.js" defer></script>
+  <script src="./assets/js/walkthrough.js" defer></script>
 
   <!-- 
     - ionicon link
   -->
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+  <!-- ── FAVOURITE GAME MODAL ──────────────────────────────────────────────── -->
+  <div id="favGameModal" class="fav-game-overlay" role="dialog" aria-modal="true" aria-label="Choose your favourite game">
+    <div class="fav-game-card">
+      <button class="fav-game-close" id="favGameModalClose" aria-label="Close">&#x2715;</button>
+      <div class="fav-game-header">
+        <div class="fav-game-emoji">&#x1F3AE;</div>
+        <h3 class="fav-game-title">What's Your Favourite Game?</h3>
+        <p class="fav-game-subtitle">We'll alert you the moment a tournament for your game opens up — so you never miss a chance to compete and win real KES prizes.</p>
+      </div>
+      <div class="fav-game-grid" id="favGameGrid">
+        <!-- Built dynamically by engage.js -->
+      </div>
+      <div class="fav-game-actions">
+        <button class="fav-game-skip" id="favGameSkipBtn">Skip for now</button>
+        <button class="fav-game-confirm" id="favGameConfirmBtn" disabled>Save my pick &#x2192;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FIRST-TIME WALKTHROUGH OVERLAY ───────────────────────────────────── -->
+  <div id="walkthroughOverlay" class="wt-overlay" style="display:none;" role="dialog" aria-modal="true" aria-label="Welcome tour">
+    <div class="wt-spotlight" id="wtSpotlight"></div>
+    <div class="wt-tooltip" id="wtTooltip">
+      <button class="wt-skip" id="wtSkipBtn" aria-label="Skip tour">Skip tour</button>
+      <div class="wt-step-badge" id="wtStepBadge">1 / 6</div>
+      <div class="wt-icon" id="wtIcon">&#x1F3AE;</div>
+      <h3 class="wt-title" id="wtTitle">Welcome to PhinTech Arena!</h3>
+      <p  class="wt-desc"  id="wtDesc">Kenya's #1 gaming tournament platform. Let us show you around real quick.</p>
+      <div class="wt-actions">
+        <button class="wt-btn wt-btn--prev" id="wtPrevBtn" style="display:none;">&#x2190; Back</button>
+        <button class="wt-btn wt-btn--next" id="wtNextBtn">Let's go &#x2192;</button>
+      </div>
+      <div class="wt-dots" id="wtDots"></div>
+    </div>
+  </div>
 
 </body>
 

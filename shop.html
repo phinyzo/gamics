@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gaming Shop — PHINTECH ARENA | Kenya's Gaming Hub</title>
+  <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="stylesheet" href="./assets/css/shop-page.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@600;700;800&family=Poppins:wght@400;500;600;700;800;900&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+</head>
+<body id="top">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-top">
+      <div class="container">
+        <div class="countdown-text">Kenya's #1 Gaming Hub &mdash; Shop Gaming Gear &nbsp;<span class="span skewBg">🛒 M-Pesa Accepted</span></div>
+        <div class="social-wrapper">
+          <p class="social-title">Follow us on :</p>
+          <ul class="social-list">
+            <li><a href="#" class="social-link"><ion-icon name="logo-facebook"></ion-icon></a></li>
+            <li><a href="#" class="social-link"><ion-icon name="logo-twitter"></ion-icon></a></li>
+            <li><a href="#" class="social-link"><ion-icon name="logo-pinterest"></ion-icon></a></li>
+            <li><a href="#" class="social-link"><ion-icon name="logo-linkedin"></ion-icon></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom skewBg" data-header>
+      <div class="container">
+        <a href="./index.html" class="logo logo-arena" aria-label="PhinTech Arena Home">
+          <span class="logo-phintech">PHINTECH</span>
+          <span class="logo-arena-word">ARENA</span>
+        </a>
+        <nav class="navbar" data-navbar>
+          <ul class="navbar-list">
+            <li class="navbar-item"><a href="./index.html#home" class="navbar-link skewBg">Home</a></li>
+            <li class="navbar-item"><a href="./index.html#games" class="navbar-link skewBg">Games</a></li>
+            <li class="navbar-item"><a href="./shop.html" class="navbar-link skewBg active-nav">Shop</a></li>
+            <li class="navbar-item"><a href="./index.html#arena" class="navbar-link skewBg">Arena</a></li>
+            <li class="navbar-item"><a href="./index.html#blog" class="navbar-link skewBg">Blog</a></li>
+          </ul>
+        </nav>
+        <div class="header-actions">
+          <button class="cart-btn" aria-label="cart" id="shopCartBtn">
+            <ion-icon name="cart"></ion-icon>
+            <span class="cart-badge" id="shopCartBadge">0</span>
+          </button>
+          <button class="nav-toggle-btn" aria-label="toggle menu" data-nav-toggler>
+            <ion-icon name="menu-outline" class="menu"></ion-icon>
+            <ion-icon name="close-outline" class="close"></ion-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SHOP HERO BANNER -->
+  <section class="sp-hero" style="background-image:url('./assets/images/shop-bg.jpg')">
+    <div class="container">
+      <p class="sp-hero-sub">Kenya's Gaming Gear Store</p>
+      <h1 class="h1 sp-hero-title">Gaming <span class="span">Shop</span></h1>
+      <p class="sp-hero-text">Controllers · Headsets · Monitors · VR · Keyboards · Smartwatches · Game Titles — all priced in KES. Pay via M-Pesa.</p>
+    </div>
+  </section>
+
+  <main>
+    <section class="sp-main section">
+      <div class="container">
+
+        <!-- Controls: search + category filter -->
+        <div class="sp-controls">
+          <div class="sp-search-wrap">
+            <ion-icon name="search-outline"></ion-icon>
+            <input type="search" id="spSearch" placeholder="Search products..." class="sp-search-input" aria-label="Search products">
+          </div>
+          <div class="sp-cats" id="spCats" role="group" aria-label="Filter by category">
+            <button class="sp-cat-btn active" data-cat="all">All</button>
+            <button class="sp-cat-btn" data-cat="Controllers">🎮 Controllers</button>
+            <button class="sp-cat-btn" data-cat="Games">🕹️ Games</button>
+            <button class="sp-cat-btn" data-cat="Headset">🎧 Headsets</button>
+            <button class="sp-cat-btn" data-cat="Monitor">🖥️ Monitors</button>
+            <button class="sp-cat-btn" data-cat="VR">VR</button>
+            <button class="sp-cat-btn" data-cat="Keyboard">⌨️ Keyboards</button>
+            <button class="sp-cat-btn" data-cat="Mouse">🖱️ Mice</button>
+            <button class="sp-cat-btn" data-cat="Chair">💺 Chairs</button>
+            <button class="sp-cat-btn" data-cat="Smartwatch">⌚ Smartwatches</button>
+            <button class="sp-cat-btn" data-cat="Storage">💾 Storage</button>
+            <button class="sp-cat-btn" data-cat="Console">🕹️ Consoles</button>
+            <button class="sp-cat-btn" data-cat="Audio">🔊 Audio</button>
+            <button class="sp-cat-btn" data-cat="Apparel">👕 Apparel</button>
+          </div>
+          <div class="sp-sort-wrap">
+            <label for="spSort" class="sp-sort-label">Sort:</label>
+            <select id="spSort" class="sp-sort-select">
+              <option value="default">Featured</option>
+              <option value="low">Price: Low → High</option>
+              <option value="high">Price: High → Low</option>
+              <option value="name">Name A–Z</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Results count -->
+        <p class="sp-results-count" id="spResultsCount">Showing all products</p>
+
+        <!-- Product Grid -->
+        <ul class="sp-grid" id="spGrid"></ul>
+
+        <!-- Empty state -->
+        <p class="sp-empty" id="spEmpty" style="display:none;">No products found. Try a different search or category.</p>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- CART DRAWER -->
+  <div class="sp-cart-overlay" id="spCartOverlay"></div>
+  <aside class="sp-cart-drawer" id="spCartDrawer" aria-label="Shopping cart">
+    <div class="sp-cart-head">
+      <h2 class="sp-cart-title"><ion-icon name="cart-outline"></ion-icon> Your Cart</h2>
+      <button class="sp-cart-close" id="spCartClose" aria-label="Close cart"><ion-icon name="close-outline"></ion-icon></button>
+    </div>
+    <div class="sp-cart-items" id="spCartItems"></div>
+    <div class="sp-cart-foot">
+      <div class="sp-cart-total-row">
+        <span>Total</span>
+        <span class="sp-cart-total" id="spCartTotal">KES 0</span>
+      </div>
+      <p class="sp-cart-mpesa-note"><ion-icon name="phone-portrait-outline"></ion-icon> M-Pesa payment at checkout</p>
+      <button class="btn skewBg sp-checkout-btn" id="spCheckoutBtn">
+        <ion-icon name="phone-portrait-outline"></ion-icon> Pay via M-Pesa
+      </button>
+      <button class="sp-cart-clear" id="spCartClear">Clear Cart</button>
+    </div>
+  </aside>
+
+  <!-- MPESA MODAL -->
+  <div class="sp-modal-overlay" id="spMpesaOverlay" style="display:none;">
+    <div class="sp-modal" id="spMpesaModal">
+      <button class="sp-modal-close" id="spMpesaClose"><ion-icon name="close-outline"></ion-icon></button>
+      <div class="sp-modal-icon"><ion-icon name="phone-portrait-outline"></ion-icon></div>
+      <h3 class="sp-modal-title">M-Pesa Checkout</h3>
+      <p class="sp-modal-sub" id="spMpesaSub">Complete your purchase</p>
+      <div class="sp-modal-amount" id="spMpesaAmount">KES 0</div>
+      <div class="sp-modal-steps">
+        <p>1. Go to <strong>M-Pesa</strong> → Lipa na M-Pesa → Paybill</p>
+        <p>2. Business No: <strong>247247</strong></p>
+        <p>3. Account No: <strong>PHINTECH-ARENA</strong></p>
+        <p>4. Amount: <span id="spMpesaAmt2">KES 0</span></p>
+        <p>5. Enter your PIN and confirm</p>
+      </div>
+      <button class="btn skewBg" onclick="document.getElementById('spMpesaOverlay').style.display='none'">Done</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer" style="margin-top:60px;">
+    <div class="footer-bottom">
+      <div class="container">
+        <p class="copyright">
+          &copy; 2025 <a href="https://phintechsolutions.com" class="copyright-link" target="_blank" rel="noopener">PhinTech Solutions</a>. Kenya's Gaming Hub.
+          &nbsp;|&nbsp; <a href="./index.html" class="copyright-link">← Back to Arena</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <script src="./assets/js/shop-page.js"></script>
+</body>
+</html>

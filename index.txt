@@ -1,4 +1,4 @@
-Gamics - Create Manage Matches
+PHINTECH ARENA - Create Manage Matches
 
 
 
@@ -15,7 +15,7 @@ Follow us on :
 <ion-icon name="logo-pinterest"></ion-icon>
 <ion-icon name="logo-linkedin"></ion-icon>
 
-Gamics
+PHINTECH ARENA
 
 Home
 Live
@@ -243,9 +243,9 @@ Subscribe
 
 #---------- FOOTER ----------#
 
-Gamics
+PHINTECH ARENA
 
-Gamics marketplace the relase etras thats sheets continig passag.
+PHINTECH ARENA marketplace the relase etras thats sheets continig passag.
 
 <ion-icon name="location"></ion-icon>
 Address : PO Box W75 Street lan West new queens
@@ -286,7 +286,7 @@ placeholder = Enter your email
 aria-label = submit
 <ion-icon name="rocket"></ion-icon>
 
-&copy; 2022 Gamics. All Right Reserved by codewithsadee
+&copy; 2022 PHINTECH ARENA. All Right Reserved by codewithsadee
 
 
 

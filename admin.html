@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhinTech Arena — Admin Dashboard</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./assets/css/admin-dashboard.css">
+  <!-- Ionicons -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <!-- Chart.js for revenue graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- ── AUTH GATE (shown while checking, hidden once verified) ── -->
+  <div id="authGate" class="auth-gate">
+    <div class="auth-gate-box">
+      <div class="auth-gate-logo">🛡️</div>
+      <h1>PhinTech Admin</h1>
+      <p id="authGateMsg">Verifying admin access...</p>
+      <div class="auth-gate-spinner"></div>
+    </div>
+  </div>
+
+  <!-- ── MAIN DASHBOARD (hidden until verified) ── -->
+  <div id="dashboard" class="dashboard" style="display:none;">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">🛡️</span>
+        <span class="brand-name">PhinTech<br><small>Admin Console</small></span>
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+          <ion-icon name="menu-outline"></ion-icon>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-section="overview">
+          <ion-icon name="grid-outline"></ion-icon><span>Overview</span>
+        </a>
+        <a href="#" class="nav-item" data-section="tournaments">
+          <ion-icon name="trophy-outline"></ion-icon><span>Tournaments</span>
+          <span class="nav-badge" id="navBadgeTourns">0</span>
+        </a>
+        <a href="#" class="nav-item" data-section="users">
+          <ion-icon name="people-outline"></ion-icon><span>Users</span>
+        </a>
+        <a href="#" class="nav-item" data-section="disputes">
+          <ion-icon name="warning-outline"></ion-icon><span>Disputes</span>
+          <span class="nav-badge nav-badge--red" id="navBadgeDisputes">0</span>
+        </a>
+        <a href="#" class="nav-item" data-section="payouts">
+          <ion-icon name="cash-outline"></ion-icon><span>Payouts</span>
+          <span class="nav-badge nav-badge--amber" id="navBadgePayouts">0</span>
+        </a>
+        <a href="#" class="nav-item" data-section="revenue">
+          <ion-icon name="bar-chart-outline"></ion-icon><span>Revenue</span>
+        </a>
+        <a href="#" class="nav-item" data-section="notifications">
+          <ion-icon name="notifications-outline"></ion-icon><span>Notifications</span>
+        </a>
+        <a href="#" class="nav-item" data-section="settings">
+          <ion-icon name="settings-outline"></ion-icon><span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="admin-avatar-wrap">
+          <img src="" alt="" id="adminAvatar" onerror="this.style.display='none'">
+          <div>
+            <p class="admin-name" id="adminName">Admin</p>
+            <p class="admin-role">Super Admin</p>
+          </div>
+        </div>
+        <div class="sidebar-footer-actions">
+          <a href="./index.html" class="sidebar-link" title="Back to site">
+            <ion-icon name="home-outline"></ion-icon><span>Back to Site</span>
+          </a>
+          <button class="sidebar-link" id="adminSignOutBtn" title="Sign Out">
+            <ion-icon name="log-out-outline"></ion-icon><span>Sign Out</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- Top bar -->
+      <header class="topbar">
+        <button class="topbar-toggle" id="topbarMenuBtn">
+          <ion-icon name="menu-outline"></ion-icon>
+        </button>
+        <div class="topbar-title" id="topbarTitle">Overview</div>
+        <div class="topbar-right">
+          <span class="topbar-time" id="topbarTime"></span>
+          <button class="topbar-refresh" id="globalRefreshBtn" title="Refresh data">
+            <ion-icon name="refresh-outline"></ion-icon>
+          </button>
+        </div>
+      </header>
+
+      <!-- ── SECTION: OVERVIEW ── -->
+      <section class="section-panel active" id="section-overview">
+        <div class="stat-grid">
+          <div class="stat-card stat-card--blue">
+            <div class="stat-icon"><ion-icon name="people-outline"></ion-icon></div>
+            <div class="stat-body">
+              <p class="stat-label">Total Users</p>
+              <p class="stat-value" id="ovUsers">—</p>
+              <p class="stat-delta" id="ovUsersNew"></p>
+            </div>
+          </div>
+          <div class="stat-card stat-card--purple">
+            <div class="stat-icon"><ion-icon name="trophy-outline"></ion-icon></div>
+            <div class="stat-body">
+              <p class="stat-label">Tournaments</p>
+              <p class="stat-value" id="ovTourns">—</p>
+              <p class="stat-delta" id="ovTournsActive"></p>
+            </div>
+          </div>
+          <div class="stat-card stat-card--green">
+            <div class="stat-icon"><ion-icon name="cash-outline"></ion-icon></div>
+            <div class="stat-body">
+              <p class="stat-label">Platform Revenue</p>
+              <p class="stat-value" id="ovRevenue">—</p>
+              <p class="stat-delta">KES total</p>
+            </div>
+          </div>
+          <div class="stat-card stat-card--amber">
+            <div class="stat-icon"><ion-icon name="warning-outline"></ion-icon></div>
+            <div class="stat-body">
+              <p class="stat-label">Open Disputes</p>
+              <p class="stat-value" id="ovDisputes">—</p>
+              <p class="stat-delta">needs review</p>
+            </div>
+          </div>
+          <div class="stat-card stat-card--red">
+            <div class="stat-icon"><ion-icon name="time-outline"></ion-icon></div>
+            <div class="stat-body">
+              <p class="stat-label">Pending Approval</p>
+              <p class="stat-value" id="ovPending">—</p>
+              <p class="stat-delta">tournaments</p>
+            </div>
+          </div>
+          <div class="stat-card stat-card--teal">
+            <div class="stat-icon"><ion-icon name="send-outline"></ion-icon></div>
+            <div class="stat-body">
+              <p class="stat-label">Pending Payouts</p>
+              <p class="stat-value" id="ovPayouts">—</p>
+              <p class="stat-delta">in queue</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick action bar -->
+        <div class="quick-actions">
+          <h3 class="section-heading">Quick Actions</h3>
+          <div class="quick-btn-row">
+            <button class="quick-btn quick-btn--primary" onclick="navigate('tournaments')">
+              <ion-icon name="checkmark-circle-outline"></ion-icon> Approve Tournaments
+            </button>
+            <button class="quick-btn quick-btn--danger" onclick="navigate('disputes')">
+              <ion-icon name="warning-outline"></ion-icon> Resolve Disputes
+            </button>
+            <button class="quick-btn quick-btn--success" id="quickRunPayoutsBtn">
+              <ion-icon name="send-outline"></ion-icon> Run Payouts Now
+            </button>
+            <button class="quick-btn quick-btn--info" onclick="navigate('users')">
+              <ion-icon name="people-outline"></ion-icon> Manage Users
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent activity feed -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Recent Activity</h3>
+            <button class="card-refresh" onclick="loadActivityFeed()"><ion-icon name="refresh-outline"></ion-icon></button>
+          </div>
+          <div id="activityFeed" class="activity-feed">
+            <p class="empty-state">Loading activity...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── SECTION: TOURNAMENTS ── -->
+      <section class="section-panel" id="section-tournaments" style="display:none;">
+        <div class="section-toolbar">
+          <h2 class="section-heading">Tournament Management</h2>
+          <div class="toolbar-filters">
+            <select id="tournFilterStatus" class="filter-select">
+              <option value="">All Status</option>
+              <option value="pending_approval">⏳ Pending Approval</option>
+              <option value="open">Open</option>
+              <option value="ongoing">Ongoing</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <input type="search" id="tournSearch" class="filter-input" placeholder="Search by name or game...">
+          </div>
+        </div>
+
+        <!-- Pending approval alert -->
+        <div class="alert alert--amber" id="pendingAlert" style="display:none;">
+          <ion-icon name="time-outline"></ion-icon>
+          <span id="pendingAlertText">You have pending tournaments awaiting approval.</span>
+        </div>
+
+        <div id="tournamentsList" class="data-list">
+          <p class="empty-state">Loading tournaments...</p>
+        </div>
+        <div class="pagination-bar">
+          <button class="page-btn" id="tournPrevBtn">← Prev</button>
+          <span id="tournPageInfo">Page 1</span>
+          <button class="page-btn" id="tournNextBtn">Next →</button>
+        </div>
+      </section>
+
+      <!-- ── SECTION: USERS ── -->
+      <section class="section-panel" id="section-users" style="display:none;">
+        <div class="section-toolbar">
+          <h2 class="section-heading">User Management</h2>
+          <div class="toolbar-filters">
+            <select id="userFilter" class="filter-select">
+              <option value="">All Users</option>
+              <option value="admin">Admins Only</option>
+              <option value="active">Has Gamer Tag</option>
+            </select>
+            <input type="search" id="userSearch" class="filter-input" placeholder="Search by email or gamer tag...">
+          </div>
+        </div>
+        <div id="usersList" class="data-list">
+          <p class="empty-state">Loading users...</p>
+        </div>
+        <div class="pagination-bar">
+          <button class="page-btn" id="userPrevBtn">← Prev</button>
+          <span id="userPageInfo">Page 1</span>
+          <button class="page-btn" id="userNextBtn">Next →</button>
+        </div>
+      </section>
+
+      <!-- ── SECTION: DISPUTES ── -->
+      <section class="section-panel" id="section-disputes" style="display:none;">
+        <div class="section-toolbar">
+          <h2 class="section-heading">Dispute Resolution</h2>
+          <p class="section-sub">Review score conflicts and rule on the winner. Both players are notified automatically.</p>
+        </div>
+        <div id="disputesList" class="data-list">
+          <p class="empty-state">Loading disputes...</p>
+        </div>
+      </section>
+
+      <!-- ── SECTION: PAYOUTS ── -->
+      <section class="section-panel" id="section-payouts" style="display:none;">
+        <div class="section-toolbar">
+          <h2 class="section-heading">Payout Management</h2>
+          <button class="quick-btn quick-btn--success" id="runPayoutsBtn">
+            <ion-icon name="send-outline"></ion-icon> Process All Pending Payouts
+          </button>
+        </div>
+        <div class="alert alert--info">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          Payouts auto-run every 5 minutes via pg_cron. Use the button above to trigger manually.
+          Requires <code>AT_API_KEY</code> to be set in Vercel environment variables.
+        </div>
+        <div id="payoutsList" class="data-list">
+          <p class="empty-state">Loading payouts...</p>
+        </div>
+      </section>
+
+      <!-- ── SECTION: REVENUE ── -->
+      <section class="section-panel" id="section-revenue" style="display:none;">
+        <div class="section-toolbar">
+          <h2 class="section-heading">Revenue & Finance</h2>
+        </div>
+        <div class="revenue-grid">
+          <div class="card revenue-card">
+            <p class="revenue-label">Total Platform Revenue</p>
+            <p class="revenue-big" id="revTotal">KES 0</p>
+            <p class="revenue-sub">10% platform fee on all tournaments</p>
+          </div>
+          <div class="card revenue-card">
+            <p class="revenue-label">Total Prize Paid Out</p>
+            <p class="revenue-big" id="revPaid">KES 0</p>
+            <p class="revenue-sub">via M-Pesa B2C</p>
+          </div>
+          <div class="card revenue-card">
+            <p class="revenue-label">Pending Payouts</p>
+            <p class="revenue-big revenue-big--amber" id="revPending">KES 0</p>
+            <p class="revenue-sub">in processing queue</p>
+          </div>
+        </div>
+        <div class="card" style="margin-block-start:20px;">
+          <div class="card-header"><h3>Transaction Ledger</h3></div>
+          <div id="revenueLedger" class="data-list">
+            <p class="empty-state">Loading transactions...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── SECTION: NOTIFICATIONS ── -->
+      <section class="section-panel" id="section-notifications" style="display:none;">
+        <div class="section-toolbar">
+          <h2 class="section-heading">Notification Queue</h2>
+          <button class="quick-btn quick-btn--primary" id="runNotifBtn">
+            <ion-icon name="paper-plane-outline"></ion-icon> Send All Pending
+          </button>
+        </div>
+        <div class="alert alert--info">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          Email via Resend · SMS via Africa's Talking. Requires <code>RESEND_API_KEY</code> and <code>AT_API_KEY</code>.
+        </div>
+        <div id="notifQueueList" class="data-list">
+          <p class="empty-state">Loading queue...</p>
+        </div>
+      </section>
+
+      <!-- ── SECTION: SETTINGS ── -->
+      <section class="section-panel" id="section-settings" style="display:none;">
+        <div class="section-toolbar">
+          <h2 class="section-heading">Platform Settings</h2>
+        </div>
+        <div class="settings-grid">
+          <!-- Admin management -->
+          <div class="card">
+            <div class="card-header"><h3><ion-icon name="shield-outline"></ion-icon> Admin Access</h3></div>
+            <p class="card-desc">Grant or revoke admin access for a user. Enter their Supabase user ID or email.</p>
+            <div class="settings-form">
+              <input type="text" id="adminTargetUser" class="filter-input" placeholder="User email or ID">
+              <div class="settings-btn-row">
+                <button class="quick-btn quick-btn--success" id="grantAdminBtn">
+                  <ion-icon name="checkmark-circle-outline"></ion-icon> Grant Admin
+                </button>
+                <button class="quick-btn quick-btn--danger" id="revokeAdminBtn">
+                  <ion-icon name="close-circle-outline"></ion-icon> Revoke Admin
+                </button>
+              </div>
+              <p class="settings-status" id="adminGrantStatus"></p>
+            </div>
+            <div id="adminList" class="data-list" style="margin-block-start:16px;">
+              <p class="empty-state">Loading admins...</p>
+            </div>
+          </div>
+
+          <!-- Platform info -->
+          <div class="card">
+            <div class="card-header"><h3><ion-icon name="server-outline"></ion-icon> System Status</h3></div>
+            <div id="systemStatus" class="system-status-grid">
+              <p class="empty-state">Checking status...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Confirmation modal -->
+  <div class="confirm-overlay" id="confirmOverlay" style="display:none;">
+    <div class="confirm-box">
+      <p class="confirm-icon" id="confirmIcon">⚠️</p>
+      <h3 id="confirmTitle">Are you sure?</h3>
+      <p id="confirmMsg">This action cannot be undone.</p>
+      <div class="confirm-actions">
+        <button class="quick-btn quick-btn--ghost" id="confirmCancel">Cancel</button>
+        <button class="quick-btn quick-btn--danger" id="confirmOk">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supabase init + admin JS -->
+  <script src="./assets/js/supabase-init.js"></script>
+  <script src="./assets/js/admin-dashboard.js"></script>
+</body>
+</html>
