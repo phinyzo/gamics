@@ -234,7 +234,10 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(tryStartWalkthrough, 1800);
 
   // Expose for manual re-launch (e.g. "Take the tour again" button in profile)
-  window.startWalkthrough = () => tryStartWalkthrough();
+  window.startWalkthrough = () => {
+    localStorage.removeItem(STORAGE_KEY); // Clear flag
+    startWalkthrough(true); // Force start
+  };
   window.endWalkthrough   = endWalkthrough;
 });
 
