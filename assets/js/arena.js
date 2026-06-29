@@ -881,7 +881,7 @@ function handleHostSubmit(e) {
 
 // ── REGISTER FORM SUBMIT ─────────────────────────────────────────────────────
 
-function handleRegisterSubmit(e) {
+async function handleRegisterSubmit(e) {
   e.preventDefault();
   const modal  = document.getElementById('registerModal');
   const status = document.getElementById('registerStatus');

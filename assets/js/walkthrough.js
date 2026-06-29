@@ -235,6 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Expose for manual re-launch (e.g. "Take the tour again" button in profile)
-window.startWalkthrough = () => startWalkthrough(true);
+window.startWalkthrough = () => tryStartWalkthrough();
 window.endWalkthrough   = endWalkthrough;
 
