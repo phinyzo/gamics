@@ -8,8 +8,6 @@
  * After payment: shows installation steps + home-visit booking option.
  */
 
-const API_BASE = window.location.origin;
-
 const GENRES = [
   { slug: '',           label: 'All'        },
   { slug: 'action',    label: 'Action'     },

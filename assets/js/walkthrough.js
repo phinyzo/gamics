@@ -232,9 +232,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   setTimeout(tryStartWalkthrough, 1800);
-});
 
-// Expose for manual re-launch (e.g. "Take the tour again" button in profile)
-window.startWalkthrough = () => tryStartWalkthrough();
-window.endWalkthrough   = endWalkthrough;
+  // Expose for manual re-launch (e.g. "Take the tour again" button in profile)
+  window.startWalkthrough = () => tryStartWalkthrough();
+  window.endWalkthrough   = endWalkthrough;
+});
 
