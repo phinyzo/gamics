@@ -12,7 +12,7 @@
  */
 const axios = require('axios');
 
-const ENV = process.env.MPESA_ENVIRONMENT || 'production';
+const ENV = (process.env.MPESA_ENVIRONMENT || 'production').trim();
 
 const ENDPOINTS = {
   sandbox: {
@@ -39,15 +39,35 @@ async function getAccessToken() {
   const consumerKey = (process.env.MPESA_CONSUMER_KEY || '').trim();
   const consumerSecret = (process.env.MPESA_CONSUMER_SECRET || '').trim();
   
+  // Debug logging - log lengths and first/last chars to verify without exposing full credentials
+  console.log('[mpesa-daraja] DEBUG OAuth attempt:');
+  console.log('  - Environment:', ENV);
+  console.log('  - OAuth URL:', API.oauth);
+  console.log('  - Consumer Key length:', consumerKey.length, 'first 4 chars:', consumerKey.substring(0, 4));
+  console.log('  - Consumer Secret length:', consumerSecret.length, 'first 4 chars:', consumerSecret.substring(0, 4));
+  console.log('  - Consumer Key has newlines?', /[\r\n]/.test(process.env.MPESA_CONSUMER_KEY || ''));
+  console.log('  - Consumer Secret has newlines?', /[\r\n]/.test(process.env.MPESA_CONSUMER_SECRET || ''));
+  
+  if (!consumerKey || consumerKey.length < 10) {
+    throw new Error('MPESA_CONSUMER_KEY is missing or invalid');
+  }
+  if (!consumerSecret || consumerSecret.length < 10) {
+    throw new Error('MPESA_CONSUMER_SECRET is missing or invalid');
+  }
+  
   const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
 
   try {
     const { data } = await axios.get(API.oauth, {
       headers: { Authorization: `Basic ${auth}` },
     });
+    console.log('[mpesa-daraja] OAuth SUCCESS - token received');
     return data.access_token;
   } catch (err) {
-    console.error('[mpesa-daraja] OAuth failed:', err.response?.data || err.message);
+    console.error('[mpesa-daraja] OAuth FAILED:');
+    console.error('  - Status:', err.response?.status);
+    console.error('  - Data:', err.response?.data);
+    console.error('  - Message:', err.message);
     throw new Error('Failed to authenticate with M-Pesa Daraja API');
   }
 }

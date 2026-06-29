@@ -252,14 +252,21 @@ async function loadWallet() {
     const txEl = document.getElementById('walletTransactions');
     if (txEl) {
       const txs = data.transactions || [];
-      if (!txs.length) {
+      // Filter out failed transactions - only show completed and pending
+      const visibleTxs = txs.filter(tx => tx.status !== 'failed');
+      
+      if (!visibleTxs.length) {
         txEl.innerHTML = '<p class="gp-empty">No transactions yet.</p>';
       } else {
         const typeIcon = { deposit:'💳', withdrawal:'💸', entry_fee:'🎮', prize:'🏆', refund:'↩️', platform_fee:'🏢' };
-        txEl.innerHTML = txs.map(tx => `
+        const statusBadge = (status) => {
+          if (status === 'pending') return '<span class="tx-pending-badge" style="font-size:0.75em;color:#ffa500;margin-left:5px;">⏳ Pending</span>';
+          return '';
+        };
+        txEl.innerHTML = visibleTxs.map(tx => `
           <div class="gp-tourn-row">
             <div class="gp-tourn-info" style="flex:1;">
-              <p class="gp-tourn-name">${typeIcon[tx.type] || '💰'} ${escAdmin(tx.description || tx.type)}</p>
+              <p class="gp-tourn-name">${typeIcon[tx.type] || '💰'} ${escAdmin(tx.description || tx.type)}${statusBadge(tx.status)}</p>
               <p class="gp-tourn-meta">${new Date(tx.created_at).toLocaleDateString()} · Ref: ${escAdmin(tx.ref || '—')}</p>
             </div>
             <span class="tc-status ${tx.amount_kes >= 0 ? 'status-open' : 'status-done'}" style="min-width:70px;text-align:right;">
