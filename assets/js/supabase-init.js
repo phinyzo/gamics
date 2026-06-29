@@ -8,7 +8,7 @@
  * PKCE exchanges a code for a session server-side via the Supabase Auth server.
  */
 (function () {
-  fetch('/api/config')
+  fetch('/api/admin?action=config')
     .then(function (r) { return r.json(); })
     .then(function (d) {
       if (!d.supabase || !d.supabase.url) {

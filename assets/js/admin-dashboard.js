@@ -580,7 +580,7 @@ async function checkSystemStatus() {
   const el = document.getElementById('systemStatus');
   if (!el) return;
   const checks = [
-    { name: 'API Endpoint',       test: () => fetch('/api/config').then(r => r.ok) },
+    { name: 'API Endpoint',       test: () => fetch('/api/admin?action=config').then(r => r.ok) },
     { name: 'Supabase Auth',      test: () => Promise.resolve(!!window._sb) },
     { name: 'RAWG Games API',     test: () => fetch('/api/games?page_size=1').then(r => r.ok) },
     { name: 'Tournaments API',    test: () => fetch('/api/tournaments?limit=1').then(r => r.ok) },
