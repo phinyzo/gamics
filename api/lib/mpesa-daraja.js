@@ -35,9 +35,11 @@ const API = ENDPOINTS[ENV];
 
 // ── OAuth: Get Access Token ──────────────────────────────────────────────────
 async function getAccessToken() {
-  const auth = Buffer.from(
-    `${process.env.MPESA_CONSUMER_KEY}:${process.env.MPESA_CONSUMER_SECRET}`
-  ).toString('base64');
+  // Trim env vars to remove any newlines/whitespace from Vercel
+  const consumerKey = (process.env.MPESA_CONSUMER_KEY || '').trim();
+  const consumerSecret = (process.env.MPESA_CONSUMER_SECRET || '').trim();
+  
+  const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
 
   try {
     const { data } = await axios.get(API.oauth, {
@@ -62,20 +64,23 @@ async function getAccessToken() {
 async function stkPush(phone, amount, accountRef, description = 'PhinTech Arena Payment') {
   const token = await getAccessToken();
   const timestamp = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 14);
-  const password = Buffer.from(
-    `${process.env.MPESA_SHORTCODE}${process.env.MPESA_PASSKEY}${timestamp}`
-  ).toString('base64');
+  
+  // Trim env vars
+  const shortcode = (process.env.MPESA_SHORTCODE || '').trim();
+  const passkey = (process.env.MPESA_PASSKEY || '').trim();
+  
+  const password = Buffer.from(`${shortcode}${passkey}${timestamp}`).toString('base64');
 
   const payload = {
-    BusinessShortCode: process.env.MPESA_SHORTCODE,
+    BusinessShortCode: shortcode,
     Password:          password,
     Timestamp:         timestamp,
     TransactionType:   'CustomerPayBillOnline',
     Amount:            Math.floor(amount),
     PartyA:            phone,                           // Customer phone
-    PartyB:            process.env.MPESA_SHORTCODE,     // Your till/paybill
+    PartyB:            shortcode,     // Your till/paybill
     PhoneNumber:       phone,
-    CallBackURL:       process.env.MPESA_CALLBACK_URL,  // Your Vercel endpoint
+    CallBackURL:       (process.env.MPESA_CALLBACK_URL || '').trim(),  // Your Vercel endpoint
     AccountReference:  accountRef,
     TransactionDesc:   description,
   };
