@@ -226,6 +226,7 @@ function setAvatarImg(imgId, fallbackId, url, initials) {
   const fallback = document.getElementById(fallbackId);
   if (!img) return;
   if (url) {
+    img.crossOrigin = 'anonymous';  // Add CORS support for DiceBear
     img.src   = url;
     img.style.display = 'block';
     img.onerror = () => {
@@ -279,7 +280,7 @@ function buildAvatarGrid(containerId, gender, currentUrl, onSelect) {
   container.innerHTML = avatars.map(a => `
     <button type="button" class="avatar-pick-btn ${a.url === currentUrl ? 'selected' : ''}"
             data-url="${a.url}" title="${a.label}" aria-label="Select ${a.label} avatar">
-      <img src="${a.url}" alt="${a.label}" loading="lazy">
+      <img src="${a.url}" alt="${a.label}" loading="lazy" crossorigin="anonymous">
       <span class="avatar-pick-name">${a.label}</span>
       <span class="avatar-pick-check"><ion-icon name="checkmark-circle"></ion-icon></span>
     </button>`).join('');
