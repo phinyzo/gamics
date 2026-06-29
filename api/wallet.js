@@ -7,7 +7,7 @@
  * POST /api/wallet?action=withdraw → initiate M-Pesa withdrawal (delegates to payout)
  */
 const { getServiceClient, getUser, setCors, normalizeKEPhone } = require('./_supabase');
-const { stkPush } = require('./mpesa-daraja');
+const { stkPush } = require('./lib/mpesa-daraja');
 
 module.exports = async function handler(req, res) {
   setCors(res);

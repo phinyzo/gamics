@@ -11,7 +11,7 @@
  *   6. (Callback at /api/mpesa-callback confirms payment → status=paid)
  */
 const { getServiceClient, getUser, setCors, normalizeKEPhone } = require('./_supabase');
-const { stkPush } = require('./mpesa-daraja');
+const { stkPush } = require('./lib/mpesa-daraja');
 
 module.exports = async function handler(req, res) {
   setCors(res);
