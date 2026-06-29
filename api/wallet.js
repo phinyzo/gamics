@@ -3,12 +3,11 @@
  * PhinTech Arena | PhinTech Solutions, Kenya
  *
  * GET  /api/wallet              → own wallet balance + recent transactions
- * POST /api/wallet?action=deposit  → record M-Pesa deposit (STK push via Lipia)
+ * POST /api/wallet?action=deposit  → initiate M-Pesa deposit (direct Daraja STK Push)
  * POST /api/wallet?action=withdraw → initiate M-Pesa withdrawal (delegates to payout)
  */
 const { getServiceClient, getUser, setCors, normalizeKEPhone } = require('./_supabase');
-
-const LIPIA_BASE = 'https://lipia-online.vercel.app/link/PHINTECHSOLUTIONS';
+const { stkPush } = require('./mpesa-daraja');
 
 module.exports = async function handler(req, res) {
   setCors(res);
@@ -47,7 +46,7 @@ module.exports = async function handler(req, res) {
 
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  // ── POST: initiate deposit (returns Lipia STK push URL) ─────────────────────
+  // ── POST: initiate deposit (M-Pesa Daraja STK Push) ─────────────────────────
   if (action === 'deposit') {
     const { amount, phone } = req.body || {};
     if (!amount || amount < 10)   return res.status(400).json({ error: 'Minimum deposit is KES 10.' });
@@ -60,10 +59,6 @@ module.exports = async function handler(req, res) {
 
     const ref = `WALLET-${user.id.slice(0, 8).toUpperCase()}-${Date.now()}`;
 
-    // Return Lipia URL — user pays, Lipia calls /api/mpesa-callback?type=deposit
-    const params = new URLSearchParams({ phone: normPhone, amount, ref });
-    const paymentUrl = `${LIPIA_BASE}?${params}`;
-
     // Store pending transaction so callback can match it
     await sb.from('wallet_transactions').insert({
       user_id:      user.id,
@@ -75,11 +70,32 @@ module.exports = async function handler(req, res) {
       description:  `Wallet deposit — KES ${amount}`,
     });
 
-    return res.status(200).json({
-      payment_url: paymentUrl,
-      ref,
-      message: `Complete M-Pesa payment of KES ${amount} to add funds to your wallet.`,
-    });
+    try {
+      // Initiate M-Pesa STK Push directly
+      const stkResponse = await stkPush(
+        normPhone,
+        parseInt(amount),
+        ref,
+        `PhinTech Arena wallet deposit - KES ${amount}`
+      );
+
+      // Store CheckoutRequestID for status queries
+      await sb.from('wallet_transactions')
+        .update({ mpesa_checkout_id: stkResponse.CheckoutRequestID })
+        .eq('ref', ref);
+
+      return res.status(200).json({
+        success: true,
+        checkoutRequestID: stkResponse.CheckoutRequestID,
+        ref,
+        message: `Check your phone (${normPhone}) and enter M-Pesa PIN to complete payment of KES ${amount}.`,
+      });
+    } catch (err) {
+      console.error('[wallet] STK Push failed:', err.message);
+      // Mark transaction as failed
+      await sb.from('wallet_transactions').update({ status: 'failed' }).eq('ref', ref);
+      return res.status(500).json({ error: err.message || 'Failed to initiate M-Pesa payment. Try again.' });
+    }
   }
 
   // ── POST: withdraw ───────────────────────────────────────────────────────────

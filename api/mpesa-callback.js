@@ -1,10 +1,11 @@
 /**
- * /api/mpesa-callback — Lipia Online payment webhook
+ * /api/mpesa-callback — M-Pesa Daraja payment callback
  * PhinTech Arena | PhinTech Solutions, Kenya
  *
- * Handles two types of payments:
+ * Handles M-Pesa Daraja STK Push callbacks for:
  *   1. Tournament registration payment  → ref starts with "ARENA-"
  *   2. Wallet deposit                   → ref starts with "WALLET-"
+ *   3. B2C payout results (optional)    → ?type=b2c_result
  *
  * After payment:
  *   - Updates registration to paid OR credits wallet
@@ -18,12 +19,61 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { ref, amount, phone, mpesa_code, status } = req.body || {};
+  console.log('[mpesa-callback] Received:', JSON.stringify(req.body, null, 2));
 
-  // Always acknowledge — Lipia expects 200 even on no-ops
-  if (!ref || status !== 'success') return res.status(200).json({ received: true });
+  // ── Handle M-Pesa Daraja STK Push callback ─────────────────────────────────
+  const darajaBody = req.body?.Body?.stkCallback;
+  if (darajaBody) {
+    // Daraja callback format
+    const resultCode = darajaBody.ResultCode;
+    const resultDesc = darajaBody.ResultDesc;
+    const checkoutRequestID = darajaBody.CheckoutRequestID;
+
+    // Extract CallbackMetadata if payment successful
+    let amount, phone, mpesaCode, ref;
+    if (resultCode === 0 && darajaBody.CallbackMetadata?.Item) {
+      const items = darajaBody.CallbackMetadata.Item;
+      amount = items.find(i => i.Name === 'Amount')?.Value;
+      phone = items.find(i => i.Name === 'PhoneNumber')?.Value;
+      mpesaCode = items.find(i => i.Name === 'MpesaReceiptNumber')?.Value;
+    }
+
+    // Find transaction by CheckoutRequestID
+    const sb = getServiceClient();
+    const { data: tx } = await sb.from('wallet_transactions')
+      .select('*')
+      .eq('mpesa_checkout_id', checkoutRequestID)
+      .maybeSingle();
+
+    if (!tx) {
+      console.warn('[mpesa-callback] No transaction found for CheckoutRequestID:', checkoutRequestID);
+      return res.status(200).json({ ResultCode: 0, ResultDesc: 'Accepted' });
+    }
+
+    ref = tx.ref;
+
+    // Payment failed
+    if (resultCode !== 0) {
+      console.log('[mpesa-callback] Payment failed:', resultDesc, ref);
+      await sb.from('wallet_transactions').update({ status: 'failed' }).eq('ref', ref);
+      return res.status(200).json({ ResultCode: 0, ResultDesc: 'Accepted' });
+    }
+
+    console.log('[mpesa-callback] Payment success:', mpesaCode, ref, 'KES', amount);
+
+    // Continue with existing logic below...
+    // Reuse the rest of the code by setting variables to match old format
+    const status = 'success';
+    // Fall through to existing wallet/tournament logic
+  } else {
+    // ── Legacy Lipia Online format (backward compatibility) ───────────────────
+    const { ref, amount, phone, mpesa_code, status } = req.body || {};
+    if (!ref || status !== 'success') return res.status(200).json({ received: true });
+    var mpesaCode = mpesa_code;
+  }
 
   const sb = getServiceClient();
+  const status = 'success'; // Ensure status is set for Daraja flow
 
   // ── WALLET DEPOSIT ─────────────────────────────────────────────────────────
   if (ref.startsWith('WALLET-')) {
@@ -43,7 +93,11 @@ module.exports = async function handler(req, res) {
 
     // Mark pending transaction as completed
     await sb.from('wallet_transactions')
-      .update({ status: 'completed', balance_after: wallet?.balance_kes || 0 })
+      .update({ 
+        status: 'completed', 
+        balance_after: wallet?.balance_kes || 0,
+        mpesa_code: mpesaCode || mpesa_code || null,
+      })
       .eq('ref', ref);
 
     // In-app notification
@@ -82,7 +136,7 @@ module.exports = async function handler(req, res) {
     // Update to paid
     const { error: ue } = await sb.from('registrations').update({
       payment_status: 'paid',
-      mpesa_code:     mpesa_code || null,
+      mpesa_code:     mpesaCode || mpesa_code || null,
     }).eq('id', reg.id);
 
     if (!ue) {
@@ -93,8 +147,8 @@ module.exports = async function handler(req, res) {
         user_id: reg.user_id,
         type:    'tournament_reminder',
         title:   `🎮 You're in! ${t?.name}`,
-        message: `Payment of KES ${amount} confirmed (${mpesa_code}). Tournament: ${t?.name}. Game: ${t?.game}. Starts: ${t?.start_date}.`,
-        data:    { tournament_id: reg.tournament_id, mpesa_code },
+        message: `Payment of KES ${amount} confirmed (${mpesaCode || mpesa_code}). Tournament: ${t?.name}. Game: ${t?.game}. Starts: ${t?.start_date}.`,
+        data:    { tournament_id: reg.tournament_id, mpesa_code: mpesaCode || mpesa_code },
       });
 
       // Queue SMS confirmation
@@ -103,7 +157,7 @@ module.exports = async function handler(req, res) {
           user_id:   reg.user_id,
           channel:   'sms',
           recipient: phone.startsWith('+') ? phone : '+' + phone,
-          body:      `PhinTech Arena: KES ${amount} received (${mpesa_code}). You're registered for ${t?.name}! Game on 🎮`,
+          body:      `PhinTech Arena: KES ${amount} received (${mpesaCode || mpesa_code}). You're registered for ${t?.name}! Game on 🎮`,
         });
       }
 

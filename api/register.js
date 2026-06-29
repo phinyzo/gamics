@@ -7,12 +7,11 @@
  *   2. Check tournament is open + has space
  *   3. Check user not already registered
  *   4. Create registration with status=pending
- *   5. Return Lipia Online payment URL for M-Pesa STK Push
- *   6. (Webhook at /api/mpesa-callback confirms payment → status=paid)
+ *   5. Initiate M-Pesa STK Push directly (Daraja API)
+ *   6. (Callback at /api/mpesa-callback confirms payment → status=paid)
  */
 const { getServiceClient, getUser, setCors, normalizeKEPhone } = require('./_supabase');
-
-const LIPIA_BASE = 'https://lipia-online.vercel.app/link/PHINTECHSOLUTIONS';
+const { stkPush } = require('./mpesa-daraja');
 
 module.exports = async function handler(req, res) {
   setCors(res);
@@ -63,17 +62,30 @@ module.exports = async function handler(req, res) {
 
   if (re) return res.status(500).json({ error: re.message });
 
-  // Build Lipia Online STK Push URL
-  const params = new URLSearchParams({
-    phone:  normPhone,
-    amount: t.entry_fee,
-    ref:    payRef,
-  });
-  const paymentUrl = `${LIPIA_BASE}?${params}`;
+  try {
+    // Initiate M-Pesa STK Push directly
+    const stkResponse = await stkPush(
+      normPhone,
+      t.entry_fee,
+      payRef,
+      `PhinTech Arena - ${t.name} (${t.game})`
+    );
 
-  return res.status(201).json({
-    registration: reg,
-    payment_url:  paymentUrl,
-    message: `Registration created. Complete M-Pesa payment of KES ${t.entry_fee} to confirm your spot.`,
-  });
+    // Store CheckoutRequestID for status queries
+    await sb.from('registrations')
+      .update({ mpesa_checkout_id: stkResponse.CheckoutRequestID })
+      .eq('id', reg.id);
+
+    return res.status(201).json({
+      registration: reg,
+      checkoutRequestID: stkResponse.CheckoutRequestID,
+      message: `STK Push sent to ${normPhone}. Enter M-Pesa PIN to pay KES ${t.entry_fee}.`,
+    });
+  } catch (err) {
+    console.error('[register] STK Push failed:', err.message);
+    // Mark registration as failed
+    await sb.from('registrations').update({ payment_status: 'failed' }).eq('id', reg.id);
+    return res.status(500).json({ error: err.message || 'M-Pesa payment initiation failed. Try again.' });
+  }
 };
+

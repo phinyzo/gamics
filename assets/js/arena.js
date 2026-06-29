@@ -9,7 +9,7 @@
  *   - Single/Double elimination bracket visualizer
  *   - ELO-based leaderboard
  *   - Match result submission + auto-verification
- *   - M-Pesa registration flow (via Lipia Online)
+ *   - M-Pesa registration flow (direct Daraja STK Push)
  *   - Host tournament form
  *   - LocalStorage persistence (backend-ready)
  *
@@ -23,7 +23,7 @@
 
 const ELO_K         = 32;   // ELO K-factor
 const STARTING_ELO  = 1500;
-const LIPIA_URL     = 'https://lipia-online.vercel.app/link/PHINTECHSOLUTIONS';
+const API_BASE      = window.location.origin; // Vercel serverless functions
 
 // ── SEED DATA — realistic Kenyan tournaments ─────────────────────────────────
 
@@ -909,8 +909,7 @@ function handleRegisterSubmit(e) {
       if (data.error) throw new Error(data.error);
       status.textContent = data.message;
       status.className   = 'visit-status success';
-      // Open Lipia payment in new tab
-      if (data.payment_url) window.open(data.payment_url, '_blank', 'noopener,noreferrer');
+      // STK Push sent directly to user's phone
       document.getElementById('registerForm')?.reset();
       setTimeout(closeRegisterModal, 4000);
     }).catch(err => {
@@ -934,19 +933,35 @@ function handleRegisterSubmit(e) {
   const digits = phone.replace(/\D/g,'');
   const fmt    = digits.startsWith('0') ? '254'+digits.slice(1) : digits.startsWith('254') ? digits : digits;
 
-  const params = new URLSearchParams({ phone: fmt, amount: t.entryFee, ref: `ARENA-${tid}-${tag}` });
-  window.open(`${LIPIA_URL}?${params}`, '_blank', 'noopener,noreferrer');
+  // Call our M-Pesa STK Push API directly (via register endpoint)
+  try {
+    const response = await fetch(`${API_BASE}/api/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tournament_id: tid,
+        gamer_tag: tag,
+        phone: fmt,
+      }),
+    });
+    const result = await response.json();
 
-  t.players.push(tag);
-  ARENA_DB.setTournaments(ts);
-  getOrCreatePlayer(tag, t.game);
+    if (!response.ok) throw new Error(result.error || 'Payment failed');
 
-  status.textContent = `STK Push sent to ${phone}. Enter your M-Pesa PIN to confirm.`;
-  status.className   = 'visit-status success';
+    status.textContent = `STK Push sent to ${phone}. Enter your M-Pesa PIN to confirm payment of KES ${t.entryFee}.`;
+    status.className   = 'visit-status success';
 
-  renderTournaments(); updateStats(); populateBracketSelect();
-  document.getElementById('registerForm')?.reset();
-  setTimeout(closeRegisterModal, 4000);
+    t.players.push(tag);
+    ARENA_DB.setTournaments(ts);
+    getOrCreatePlayer(tag, t.game);
+
+    renderTournaments(); updateStats(); populateBracketSelect();
+    document.getElementById('registerForm')?.reset();
+    setTimeout(closeRegisterModal, 4000);
+  } catch (err) {
+    status.textContent = err.message || 'Payment initiation failed. Try again.';
+    status.className = 'visit-status error';
+  }
 }
 
 // ── RESULT SUBMISSION ────────────────────────────────────────────────────────
