@@ -234,9 +234,13 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(tryStartWalkthrough, 1800);
 
   // Expose for manual re-launch (e.g. "Take the tour again" button in profile)
+  // Note: startWalkthrough is already defined globally above
+  const originalStartWalkthrough = window.startWalkthrough || startWalkthrough;
   window.startWalkthrough = () => {
     localStorage.removeItem(STORAGE_KEY); // Clear flag
-    startWalkthrough(true); // Force start
+    if (typeof originalStartWalkthrough === 'function') {
+      originalStartWalkthrough(true); // Force start
+    }
   };
   window.endWalkthrough   = endWalkthrough;
 });
