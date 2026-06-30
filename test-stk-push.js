@@ -48,7 +48,7 @@ async function testSTKPush() {
       PhoneNumber: PHONE,
       CallBackURL: CALLBACK_URL,
       AccountReference: 'TEST-' + Date.now(),
-      TransactionDesc: 'PhinTech Arena Test Payment',
+      TransactionDesc: 'PhinTech Arena Payment',
     };
 
     console.log('Request payload:');
