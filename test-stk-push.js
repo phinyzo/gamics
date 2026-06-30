@@ -12,7 +12,7 @@ const PASSKEY = '9c79f92c1fe6fe1144dfdb4a4543d0d0b8772f52f43d125f611e772121c507e
 const SHORTCODE = '4501895';
 const PHONE = '254756546347'; // Your phone number
 const AMOUNT = 10;
-const CALLBACK_URL = 'https://gamics.vercel.app/api/mpesa-callback';
+const CALLBACK_URL = 'https://gamics.vercel.app/api/payment-callback';
 
 const OAUTH_URL = 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
 const STK_PUSH_URL = 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest';

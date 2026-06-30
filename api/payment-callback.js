@@ -1,15 +1,15 @@
 /**
- * /api/mpesa-callback — M-Pesa Daraja payment callback
+ * /api/payment-callback — Payment provider callback
  * PhinTech Arena | PhinTech Solutions, Kenya
  *
- * Handles M-Pesa Daraja STK Push callbacks for:
+ * Handles payment callbacks for:
  *   1. Tournament registration payment  → ref starts with "ARENA-"
  *   2. Wallet deposit                   → ref starts with "WALLET-"
  *   3. B2C payout results (optional)    → ?type=b2c_result
  *
  * After payment:
  *   - Updates registration to paid OR credits wallet
- *   - Sends in-app + SMS notification
+ *   - Sends in-app notification
  *   - Triggers bracket auto-start if tournament is now full
  */
 const { getServiceClient, setCors } = require('./_supabase');
@@ -19,9 +19,9 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  console.log('[mpesa-callback] Received:', JSON.stringify(req.body, null, 2));
+  console.log('[payment-callback] Received:', JSON.stringify(req.body, null, 2));
 
-  // ── Handle M-Pesa Daraja STK Push callback ─────────────────────────────────
+  // ── Handle payment provider STK Push callback ─────────────────────────────────
   const darajaBody = req.body?.Body?.stkCallback;
   if (darajaBody) {
     // Daraja callback format

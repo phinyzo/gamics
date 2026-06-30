@@ -11,8 +11,8 @@ const CONSUMER_KEY = 'P5K0wSGunjLUsA3ScyItbSUS5nvIk8vGJ5WTeG8JlYAjrPWw';
 const CONSUMER_SECRET = 'DyGp3b8IGW8q6ePhpETGpHGrkBnFfaHizrNroVC1xZqoW3G2zpHd7H3N3ivscm4v';
 const SHORTCODE = '4501895';
 
-const VALIDATION_URL = 'https://gamics.vercel.app/api/mpesa-validation';
-const CONFIRMATION_URL = 'https://gamics.vercel.app/api/mpesa-confirmation';
+const VALIDATION_URL = 'https://gamics.vercel.app/api/payment-validation';
+const CONFIRMATION_URL = 'https://gamics.vercel.app/api/payment-confirmation';
 
 const OAUTH_URL = 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
 const REGISTER_URL = 'https://api.safaricom.co.ke/mpesa/c2b/v1/registerurl';

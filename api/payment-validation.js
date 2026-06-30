@@ -1,8 +1,8 @@
 /**
- * Payment Validation URL
- * Safaricom calls this BEFORE processing payment to validate the transaction
+ * Payment C2B Validation URL
+ * Payment provider calls this BEFORE processing payment to validate the transaction
  * 
- * URL: https://gamics.vercel.app/api/mpesa-validation
+ * URL: https://gamics.vercel.app/api/payment-validation
  */
 const { setCors } = require('./_supabase');
 
@@ -12,7 +12,7 @@ module.exports = async function handler(req, res) {
 
   console.log('[payment-validation] Received validation request:', JSON.stringify(req.body, null, 2));
 
-  // Safaricom expects this exact response format
+  // Payment provider expects this exact response format
   // ResultCode 0 = Accept payment
   // ResultCode non-zero = Reject payment
   

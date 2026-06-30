@@ -1,8 +1,8 @@
 /**
- * Payment Confirmation URL
- * Safaricom calls this AFTER processing payment to confirm the transaction
+ * Payment C2B Confirmation URL
+ * Payment provider calls this AFTER processing payment to confirm the transaction
  * 
- * URL: https://gamics.vercel.app/api/mpesa-confirmation
+ * URL: https://gamics.vercel.app/api/payment-confirmation
  */
 const { getServiceClient, setCors } = require('./_supabase');
 
@@ -16,7 +16,7 @@ module.exports = async function handler(req, res) {
   
   // Extract payment details
   const {
-    TransID,           // Transaction confirmation code
+    TransID,           // M-Pesa confirmation code (e.g., "QGX7HJKLM")
     TransAmount,       // Amount paid
     MSISDN,            // Customer phone number
     BillRefNumber,     // Account reference (your transaction ref)
@@ -52,7 +52,7 @@ module.exports = async function handler(req, res) {
           p_user_id: transaction.user_id,
           p_amount: parseInt(TransAmount),
           p_type: 'deposit',
-          p_desc: `Mobile payment confirmed - ${TransID}`,
+          p_desc: `M-Pesa deposit confirmed - ${TransID}`,
           p_ref: TransID,
         });
 
@@ -62,7 +62,7 @@ module.exports = async function handler(req, res) {
         console.log('[payment-confirmation] No matching transaction for ref:', BillRefNumber);
         
         // Store in a separate table for manual reconciliation
-        await sb.from('unmatched_payments').insert({
+        await sb.from('payment_unmatched').insert({
           trans_id: TransID,
           amount: parseFloat(TransAmount),
           phone: MSISDN,
