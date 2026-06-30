@@ -316,7 +316,9 @@ async function initiateDeposit() {
     
     // Reload wallet data after a few seconds to show pending transaction
     setTimeout(() => {
-      loadWalletData();
+      if (typeof loadWalletData === 'function') {
+        loadWalletData();
+      }
     }, 2000);
     
   } catch (e) {
