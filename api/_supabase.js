@@ -67,42 +67,47 @@ function normalizeKEPhone(raw) {
 
   let normalized;
 
-  // Handle 10-digit numbers starting with 0
-  if (/^0(7|1)\d{8}$/.test(digits)) {
-    // 07XXXXXXXX or 01XXXXXXXX → 254 + rest
-    normalized = '254' + digits.slice(1);
-  } 
-  // Handle 9-digit numbers (no leading 0)
-  else if (/^[17]\d{8}$/.test(digits)) {
-    // 7XXXXXXXX or 1XXXXXXXX (9 digits) → 254 + digits
-    normalized = '254' + digits;
-  } 
-  // Handle numbers starting with 011X (Telkom/new prefixes) - 10 digits starting with 0
-  else if (/^011\d{7}$/.test(digits)) {
-    // 0110XXXXXX, 0111XXXXXX, etc. → 254110XXXXXX
+  // Handle 10-digit numbers starting with 07 (Safaricom)
+  if (/^07\d{8}$/.test(digits)) {
+    // 07XXXXXXXX → 2547XXXXXXXX
     normalized = '254' + digits.slice(1);
   }
-  // Handle 254 prefixed numbers (with or without +)
-  else if (/^254[017]\d{8}$/.test(digits)) {
-    // Already in correct format: 2547XXXXXXXX or 2541XXXXXXXX or 2540XXXXXXXX
+  // Handle 10-digit numbers starting with 01 (Airtel - old format)
+  else if (/^01[0-9]\d{7}$/.test(digits)) {
+    // 010XXXXXXX, 011XXXXXXX, 012XXXXXXX, etc. → 254 + rest
+    normalized = '254' + digits.slice(1);
+  }
+  // Handle 9-digit numbers starting with 7 (no leading 0)
+  else if (/^7\d{8}$/.test(digits)) {
+    // 7XXXXXXXX → 2547XXXXXXXX
+    normalized = '254' + digits;
+  }
+  // Handle 9-digit numbers starting with 1 (no leading 0)
+  else if (/^1\d{8}$/.test(digits)) {
+    // 1XXXXXXXX → 2541XXXXXXXX
+    normalized = '254' + digits;
+  }
+  // Handle 254 prefixed numbers (already normalized)
+  else if (/^254[0-9]\d{8}$/.test(digits)) {
+    // Already in correct format: 2547XXXXXXXX, 2541XXXXXXXX, 254110XXXXXX, etc.
     normalized = digits;
-  } 
-  // Handle +254 with proper format
-  else if (/^\+?254[017]\d{8}$/.test(raw.replace(/\s/g, ''))) {
-    normalized = digits.replace(/^\+/, '');
-  } 
+  }
+  // Handle +254 format
+  else if (/^\+254[0-9]\d{8}$/.test(raw)) {
+    normalized = raw.slice(1); // Remove the +
+  }
   else {
     console.warn('[normalizeKEPhone] Invalid format:', raw, '→ digits:', digits);
     return null;
   }
 
-  // Final check: must be exactly 254 + valid prefix + 8 more digits = 12 digits total
-  // Valid patterns: 2547XXXXXXXX, 2541XXXXXXXX, 254110XXXXXX, 254111XXXXXX, etc.
-  if (!/^254[017]\d{8}$/.test(normalized)) {
+  // Final validation: must be exactly 12 digits starting with 254
+  if (!/^254\d{9}$/.test(normalized)) {
     console.warn('[normalizeKEPhone] Final validation failed:', normalized);
     return null;
   }
   
+  console.log('[normalizeKEPhone] Success:', raw, '→', normalized);
   return normalized;
 }
 
