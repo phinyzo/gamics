@@ -301,10 +301,24 @@ async function initiateDeposit() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
 
-    // Open payment URL in new tab
-    window.open(data.payment_url, '_blank', 'noopener');
-    if (status) { status.textContent = '✅ Payment page opened! Complete the M-Pesa payment. Your balance will update automatically.'; status.className = 'visit-status success'; }
-    document.getElementById('walletDepositForm').style.display = 'none';
+    // M-Pesa Daraja STK Push - no payment page, prompt goes directly to phone
+    if (status) { 
+      status.textContent = `📱 STK Push sent to ${phone}! Check your phone and enter your M-Pesa PIN to complete payment of KES ${amount}.`; 
+      status.className = 'visit-status success'; 
+    }
+    
+    // Show the transaction reference for tracking
+    if (data.ref) {
+      setTimeout(() => {
+        if (status) status.textContent += ` Ref: ${data.ref}`;
+      }, 1000);
+    }
+    
+    // Reload wallet data after a few seconds to show pending transaction
+    setTimeout(() => {
+      loadWalletData();
+    }, 2000);
+    
   } catch (e) {
     if (status) { status.textContent = e.message; status.className = 'visit-status error'; }
   } finally {
