@@ -109,10 +109,16 @@ async function stkPush(phone, amount, accountRef, description = 'PhinTech Arena 
     const { data } = await axios.post(API.stkPush, payload, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    console.log('[mpesa-daraja] STK Push response:', JSON.stringify(data, null, 2));
     console.log('[mpesa-daraja] STK Push initiated:', data.CheckoutRequestID, accountRef);
     return data;
   } catch (err) {
-    console.error('[mpesa-daraja] STK Push failed:', err.response?.data || err.message);
+    console.error('[mpesa-daraja] STK Push failed:');
+    console.error('  - Status:', err.response?.status);
+    console.error('  - Error Code:', err.response?.data?.errorCode);
+    console.error('  - Error Message:', err.response?.data?.errorMessage);
+    console.error('  - Full response:', JSON.stringify(err.response?.data, null, 2));
+    console.error('  - Payload sent:', JSON.stringify({ ...payload, Password: '[REDACTED]' }, null, 2));
     throw new Error(err.response?.data?.errorMessage || 'M-Pesa STK Push failed');
   }
 }

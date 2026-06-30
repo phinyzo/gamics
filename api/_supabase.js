@@ -55,6 +55,9 @@ function setCors(res) {
  *   2547XXXXXXXX → unchanged
  *   2541XXXXXXXX → unchanged
  *   +2547XXXXXXXX → 2547XXXXXXXX
+ *   +254110XXXXXX → 254110XXXXXX (Telkom - 0110 prefix)
+ *   +254111XXXXXX → 254111XXXXXX (Safaricom - 0111 prefix)
+ *   +254112-119   → All valid prefixes
  *
  * Returns null if the number cannot be normalised to a valid 12-digit KE number.
  */
@@ -64,23 +67,42 @@ function normalizeKEPhone(raw) {
 
   let normalized;
 
-  if (/^0[17]\d{8}$/.test(digits)) {
+  // Handle 10-digit numbers starting with 0
+  if (/^0(7|1)\d{8}$/.test(digits)) {
     // 07XXXXXXXX or 01XXXXXXXX → 254 + rest
     normalized = '254' + digits.slice(1);
-  } else if (/^[17]\d{8}$/.test(digits)) {
+  } 
+  // Handle 9-digit numbers (no leading 0)
+  else if (/^[17]\d{8}$/.test(digits)) {
     // 7XXXXXXXX or 1XXXXXXXX (9 digits) → 254 + digits
     normalized = '254' + digits;
-  } else if (/^254[17]\d{8}$/.test(digits)) {
-    // Already in correct format
+  } 
+  // Handle numbers starting with 011X (Telkom/new prefixes) - 10 digits starting with 0
+  else if (/^011\d{7}$/.test(digits)) {
+    // 0110XXXXXX, 0111XXXXXX, etc. → 254110XXXXXX
+    normalized = '254' + digits.slice(1);
+  }
+  // Handle 254 prefixed numbers (with or without +)
+  else if (/^254[017]\d{8}$/.test(digits)) {
+    // Already in correct format: 2547XXXXXXXX or 2541XXXXXXXX or 2540XXXXXXXX
     normalized = digits;
-  } else if (/^\+?254[17]\d{8}$/.test(raw.replace(/\s/g, ''))) {
+  } 
+  // Handle +254 with proper format
+  else if (/^\+?254[017]\d{8}$/.test(raw.replace(/\s/g, ''))) {
     normalized = digits.replace(/^\+/, '');
-  } else {
+  } 
+  else {
+    console.warn('[normalizeKEPhone] Invalid format:', raw, '→ digits:', digits);
     return null;
   }
 
-  // Final check: must be exactly 254 + 7/1 + 8 digits = 12 digits total
-  if (!/^254[17]\d{8}$/.test(normalized)) return null;
+  // Final check: must be exactly 254 + valid prefix + 8 more digits = 12 digits total
+  // Valid patterns: 2547XXXXXXXX, 2541XXXXXXXX, 254110XXXXXX, 254111XXXXXX, etc.
+  if (!/^254[017]\d{8}$/.test(normalized)) {
+    console.warn('[normalizeKEPhone] Final validation failed:', normalized);
+    return null;
+  }
+  
   return normalized;
 }
 
