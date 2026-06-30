@@ -1,5 +1,5 @@
 /**
- * M-Pesa C2B Confirmation URL
+ * Payment Confirmation URL
  * Safaricom calls this AFTER processing payment to confirm the transaction
  * 
  * URL: https://gamics.vercel.app/api/mpesa-confirmation
@@ -10,13 +10,13 @@ module.exports = async function handler(req, res) {
   setCors(res);
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  console.log('[mpesa-confirmation] Received confirmation:', JSON.stringify(req.body, null, 2));
+  console.log('[payment-confirmation] Received confirmation:', JSON.stringify(req.body, null, 2));
 
   const data = req.body || {};
   
   // Extract payment details
   const {
-    TransID,           // M-Pesa confirmation code (e.g., "QGX7HJKLM")
+    TransID,           // Transaction confirmation code
     TransAmount,       // Amount paid
     MSISDN,            // Customer phone number
     BillRefNumber,     // Account reference (your transaction ref)
@@ -52,17 +52,17 @@ module.exports = async function handler(req, res) {
           p_user_id: transaction.user_id,
           p_amount: parseInt(TransAmount),
           p_type: 'deposit',
-          p_desc: `M-Pesa deposit confirmed - ${TransID}`,
+          p_desc: `Mobile payment confirmed - ${TransID}`,
           p_ref: TransID,
         });
 
-        console.log('[mpesa-confirmation] Transaction completed:', BillRefNumber);
+        console.log('[payment-confirmation] Transaction completed:', BillRefNumber);
       } else {
         // No matching transaction - log it for manual review
-        console.log('[mpesa-confirmation] No matching transaction for ref:', BillRefNumber);
+        console.log('[payment-confirmation] No matching transaction for ref:', BillRefNumber);
         
         // Store in a separate table for manual reconciliation
-        await sb.from('mpesa_unmatched_payments').insert({
+        await sb.from('unmatched_payments').insert({
           trans_id: TransID,
           amount: parseFloat(TransAmount),
           phone: MSISDN,
@@ -76,7 +76,7 @@ module.exports = async function handler(req, res) {
     }
 
   } catch (error) {
-    console.error('[mpesa-confirmation] Error processing:', error);
+    console.error('[payment-confirmation] Error processing:', error);
   }
 
   // Always respond with success - Safaricom retries if we don't
