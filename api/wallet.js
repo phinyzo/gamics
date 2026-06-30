@@ -79,20 +79,38 @@ module.exports = async function handler(req, res) {
         `PhinTech Arena wallet deposit - KES ${amount}`
       );
 
+      console.log('[wallet] STK Push response:', JSON.stringify(stkResponse, null, 2));
+
       // Store CheckoutRequestID for status queries
       await sb.from('wallet_transactions')
-        .update({ mpesa_checkout_id: stkResponse.CheckoutRequestID })
+        .update({ 
+          mpesa_checkout_id: stkResponse.CheckoutRequestID,
+          description: `Wallet deposit — KES ${amount} — STK: ${stkResponse.ResponseDescription || 'Sent'}`,
+        })
         .eq('ref', ref);
 
       return res.status(200).json({
         success: true,
         checkoutRequestID: stkResponse.CheckoutRequestID,
         ref,
+        responseCode: stkResponse.ResponseCode,
+        responseDescription: stkResponse.ResponseDescription,
         message: `Check your phone (${normPhone}) and enter M-Pesa PIN to complete payment of KES ${amount}.`,
       });
     } catch (err) {
       console.error('[wallet] STK Push failed:', err.message);
-      // Mark transaction as failed
+      console.error('[wallet] Full error:', err);
+      
+      // Mark transaction as failed and store error details
+      await sb.from('wallet_transactions')
+        .update({ 
+          status: 'failed',
+          description: `Wallet deposit — KES ${amount} — FAILED: ${err.message}`,
+        })
+        .eq('ref', ref);
+        
+      return res.status(500).json({ error: err.message || 'Failed to initiate M-Pesa payment. Try again.' });
+    }
       await sb.from('wallet_transactions').update({ status: 'failed' }).eq('ref', ref);
       return res.status(500).json({ error: err.message || 'Failed to initiate M-Pesa payment. Try again.' });
     }
